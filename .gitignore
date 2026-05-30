@@ -1,0 +1,5 @@
+# Sestavené plugin archivy (generované CI/lokálně)
+plugins/*/dist/*.plugin
+
+# Dočasné soubory z validace
+registry.json.bak

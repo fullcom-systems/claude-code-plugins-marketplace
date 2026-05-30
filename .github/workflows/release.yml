@@ -1,0 +1,84 @@
+name: Release Plugin
+
+on:
+  push:
+    tags:
+      - 'plugins/*/v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Instalace závislostí
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq zip
+          pip install check-jsonschema
+
+      - name: Parsování tagu
+        id: tag
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+          # Formát: plugins/<id>/v<verze>
+          if ! echo "$TAG" | grep -qE '^plugins/[a-z0-9-]+/v[0-9]+\.[0-9]+\.[0-9]+'; then
+            echo "Neplatný formát tagu: ${TAG}" >&2
+            echo "Očekáváno: plugins/<id>/v<verze>" >&2
+            exit 1
+          fi
+
+          PLUGIN_ID=$(echo "$TAG" | sed -E 's|^plugins/([a-z0-9-]+)/v.*|\1|')
+          VERSION=$(echo "$TAG" | sed -E 's|^plugins/[a-z0-9-]+/v(.*)|\1|')
+          echo "plugin_id=${PLUGIN_ID}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Plugin: ${PLUGIN_ID}, verze: ${VERSION}"
+
+      - name: Validace pluginu
+        run: |
+          bash scripts/validate-plugin.sh "plugins/${{ steps.tag.outputs.plugin_id }}"
+
+      - name: Kontrola shody verze v plugin.json
+        run: |
+          PLUGIN_VERSION=$(jq -r '.version' "plugins/${{ steps.tag.outputs.plugin_id }}/plugin.json")
+          TAG_VERSION="${{ steps.tag.outputs.version }}"
+          if [ "$PLUGIN_VERSION" != "$TAG_VERSION" ]; then
+            echo "Verze v plugin.json (${PLUGIN_VERSION}) neodpovídá tagu (${TAG_VERSION})" >&2
+            exit 1
+          fi
+
+      - name: Sestavení pluginu
+        run: |
+          bash scripts/build-plugin.sh "plugins/${{ steps.tag.outputs.plugin_id }}"
+
+      - name: Vytvoření GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: "${{ steps.tag.outputs.plugin_id }} v${{ steps.tag.outputs.version }}"
+          generate_release_notes: true
+          files: |
+            plugins/${{ steps.tag.outputs.plugin_id }}/dist/${{ steps.tag.outputs.plugin_id }}-${{ steps.tag.outputs.version }}.plugin
+
+      - name: Aktualizace registry.json
+        run: bash scripts/update-registry.sh
+
+      - name: Commit registry.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add registry.json
+          if git diff --staged --quiet; then
+            echo "registry.json beze změn."
+          else
+            git commit -m "chore(registry): aktualizace po release ${{ steps.tag.outputs.plugin_id }} v${{ steps.tag.outputs.version }}"
+            git push
+          fi

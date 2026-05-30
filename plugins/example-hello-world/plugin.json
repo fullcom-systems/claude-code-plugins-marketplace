@@ -1,0 +1,19 @@
+{
+  "$schema": "../../schema/plugin.schema.json",
+  "id": "example-hello-world",
+  "name": "Hello World Example",
+  "version": "1.0.0",
+  "description": "Ukázkový plugin demonstrující strukturu marketplace repozitáře. Obsahuje jeden jednoduchý Skill.",
+  "author": "Fullsys",
+  "license": "MIT",
+  "tags": ["example", "template"],
+  "types": ["skill"],
+  "skills": [
+    {
+      "id": "hello-world",
+      "path": "skills/hello-world/SKILL.md",
+      "trigger": "Uživatel napíše 'hello world' nebo požádá o ukázkové pozdravení."
+    }
+  ],
+  "mcpServers": []
+}
