@@ -11,4 +11,4 @@ a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
 - Počáteční verze ukázkového pluginu
 - Skill `hello-world` s diagnostickým výstupem
-- Metadata v `plugin.json` dle marketplace schématu
+- Manifest `.claude-plugin/plugin.json`

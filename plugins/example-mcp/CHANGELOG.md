@@ -10,5 +10,5 @@ a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 ### Added
 
 - Počáteční verze ukázkového MCP pluginu
-- Konfigurace MCP serveru `everything` (`mcp/everything.json`)
-- Metadata v `plugin.json` dle marketplace schématu
+- Konfigurace MCP serveru `everything` (`.mcp.json`)
+- Manifest `.claude-plugin/plugin.json`

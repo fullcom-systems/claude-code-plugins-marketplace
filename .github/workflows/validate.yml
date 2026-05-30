@@ -1,7 +1,9 @@
-name: Validate Plugins
+name: Validate Marketplace
 
 on:
   pull_request:
+    branches: [main, master]
+  push:
     branches: [main, master]
 
 jobs:
@@ -10,57 +12,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Instalace závislostí
         run: |
           sudo apt-get update
-          sudo apt-get install -y jq zip
-          pip install check-jsonschema
+          sudo apt-get install -y jq
 
-      - name: Detekce změněných pluginů
-        id: changed
-        run: |
-          BASE="${{ github.event.pull_request.base.sha }}"
-          HEAD="${{ github.event.pull_request.head.sha }}"
-          CHANGED=$(git diff --name-only "$BASE" "$HEAD" | grep '^plugins/' | cut -d/ -f2 | sort -u | tr '\n' ' ' || true)
-          if [ -z "${CHANGED// /}" ]; then
-            echo "Žádné změny v plugins/ — validuji všechny pluginy"
-            CHANGED=$(find plugins -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort | tr '\n' ' ' || true)
-          fi
-          echo "plugins=${CHANGED}" >> "$GITHUB_OUTPUT"
-          echo "Pluginy k validaci: ${CHANGED:-žádné}"
-
-      - name: Validace pluginů
-        run: |
-          PLUGINS="${{ steps.changed.outputs.plugins }}"
-          if [ -z "$PLUGINS" ]; then
-            echo "Žádné pluginy k validaci."
-            exit 0
-          fi
-          FAILED=0
-          for id in $PLUGINS; do
-            if [ -d "plugins/$id" ] && [ -f "plugins/$id/plugin.json" ]; then
-              echo "Validuji plugins/$id ..."
-              if ! bash scripts/validate-plugin.sh "plugins/$id"; then
-                FAILED=1
-              fi
-            fi
-          done
-          exit $FAILED
-
-      - name: Validace registry.json proti schématu
-        run: |
-          check-jsonschema --schemafile schema/registry.schema.json registry.json
-
-      - name: Kontrola aktuálnosti registry.json
-        run: |
-          cp registry.json registry.json.bak
-          bash scripts/update-registry.sh
-          if ! diff <(jq -S 'del(.updated)' registry.json.bak) <(jq -S 'del(.updated)' registry.json); then
-            echo "registry.json není aktuální. Spusťte: ./scripts/update-registry.sh" >&2
-            diff <(jq -S 'del(.updated)' registry.json.bak) <(jq -S 'del(.updated)' registry.json) || true
-            exit 1
-          fi
-          echo "registry.json je aktuální."
+      - name: Validace marketplace a pluginů
+        run: bash scripts/validate-marketplace.sh

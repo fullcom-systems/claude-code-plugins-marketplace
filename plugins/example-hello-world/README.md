@@ -1,6 +1,6 @@
 # Hello World Example
 
-Ukázkový plugin pro Claude Plugin Marketplace. Slouží jako referenční implementace a ověření, že infrastruktura marketplace funguje správně.
+Ukázkový plugin pro Fullsys Claude Plugin Marketplace. Slouží jako referenční implementace skill pluginu a ověření, že marketplace funguje.
 
 ## Popis
 
@@ -8,19 +8,12 @@ Plugin obsahuje jeden skill `hello-world`, který se aktivuje při pozdravení n
 
 ## Instalace
 
-1. Stáhněte soubor `example-hello-world-1.0.0.plugin` z [GitHub Releases](https://github.com/fullsys/claude-plugin-marketplace/releases) nebo sestavte lokálně:
+Nejprve přidejte marketplace (jednorázově) a poté nainstalujte plugin:
 
-   ```bash
-   ./scripts/build-plugin.sh plugins/example-hello-world
-   ```
-
-2. V Claude Cowork naimportujte `.plugin` soubor přes dialog pro instalaci pluginů.
-
-3. Alternativně zkopírujte skill do lokální složky skills:
-
-   ```bash
-   cp -r plugins/example-hello-world/skills/hello-world ~/.claude/skills/
-   ```
+```
+/plugin marketplace add fullsys/claude-plugin-marketplace
+/plugin install example-hello-world@fullsys-plugins
+```
 
 ## Použití
 
@@ -34,9 +27,9 @@ Skill odpoví pozdravem a zobrazí diagnostické informace o stavu pluginu.
 
 ## Požadavky
 
-- Claude Cowork s podporou pluginů a skills
+- Claude Code s podporou pluginů a skills
 - Žádné externí závislosti
 
 ## Přispívání
 
-Tento plugin je referenční šablona. Pro přidání vlastního pluginu postupujte podle [CONTRIBUTING.md](../../CONTRIBUTING.md) v kořeni repozitáře.
+Tento plugin je referenční šablona skill pluginu. Pro přidání vlastního pluginu postupujte podle [CONTRIBUTING.md](../../CONTRIBUTING.md) v kořeni repozitáře.

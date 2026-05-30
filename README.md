@@ -1,81 +1,81 @@
-# Claude Plugin Marketplace
+# Fullsys Claude Plugin Marketplace
 
-Interní katalog a distribuční bod pro Claude Cowork pluginy, MCP server konfigurace a Skills.
+Interní katalog Claude Code pluginů Fullsys — **skills** a **MCP servery**, distribuované nativně přes Git.
 
 ## Co obsahuje
 
 | Typ artefaktu | Popis |
 |---|---|
-| **Pluginy** (`.plugin`) | ZIP archivy pro Claude Cowork |
-| **MCP servery** | JSON konfigurace vzdálených/lokálních serverů |
-| **Skills** | `SKILL.md` soubory s instrukcemi pro Claude |
+| **Skills** | `SKILL.md` soubory s instrukcemi pro Claude (adresář `skills/`) |
+| **MCP servery** | Konfigurace MCP serverů (`.mcp.json`) |
 
-Hlavní index všech pluginů je v souboru [`registry.json`](registry.json).
+Index marketplace je [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json). Jednotlivé pluginy jsou v adresáři [`plugins/`](plugins/).
 
 ## Rychlý start
 
+### Přidání marketplace
+
+V Claude Code:
+
+```
+/plugin marketplace add fullsys/claude-plugin-marketplace
+```
+
+(nebo URL repozitáře, případně lokální cesta `./plugins-marketplace` pro vývoj).
+
 ### Instalace pluginu
 
-1. Najděte plugin v [`registry.json`](registry.json) nebo v adresáři [`plugins/`](plugins/).
-2. Stáhněte `.plugin` soubor z [GitHub Releases](https://github.com/fullsys/claude-plugin-marketplace/releases) nebo sestavte lokálně:
+```
+/plugin install example-hello-world@fullsys-plugins
+```
 
-   ```bash
-   ./scripts/build-plugin.sh plugins/example-hello-world
-   ```
-
-3. V Claude Cowork naimportujte `.plugin` soubor.
+Dostupné pluginy zobrazíte přes `/plugin` nebo v [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json).
 
 ### Ověření funkčnosti
 
-Spusťte ukázkový plugin a napište `hello world` — skill zobrazí diagnostické informace.
+Po instalaci `example-hello-world` napište `hello world` — skill zobrazí diagnostické informace.
 
 ## Jak přidat nový plugin
 
-1. Vytvořte adresář `plugins/<id>/` podle vhodné šablony:
+1. Vytvořte adresář `plugins/<name>/` podle vhodné šablony:
    - skill plugin → [`plugins/example-hello-world/`](plugins/example-hello-world/)
    - MCP plugin → [`plugins/example-mcp/`](plugins/example-mcp/)
-2. Vyplňte povinné soubory: `plugin.json`, `README.md`, `CHANGELOG.md`.
-3. Spusťte validaci:
+2. Vyplňte `plugins/<name>/.claude-plugin/plugin.json` (povinné je jen pole `name`).
+3. Přidejte komponenty:
+   - skills → `skills/<skill-id>/SKILL.md`
+   - MCP server → `.mcp.json`
+4. Zaregistrujte plugin do [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) (pole `plugins`).
+5. Ověřte lokálně a odešlete Pull Request:
 
    ```bash
-   ./scripts/validate-plugin.sh plugins/<id>
+   ./scripts/validate-marketplace.sh
    ```
-
-4. Aktualizujte registry:
-
-   ```bash
-   ./scripts/update-registry.sh
-   ```
-
-5. Odešlete Pull Request — CI automaticky ověří strukturu a konzistenci registry.
 
 Podrobná pravidla jsou v [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Skripty
+## Struktura repozitáře
 
-| Skript | Popis |
-|---|---|
-| [`scripts/validate-plugin.sh`](scripts/validate-plugin.sh) | Validace pluginu proti JSON schématu |
-| [`scripts/build-plugin.sh`](scripts/build-plugin.sh) | Sestavení `.plugin` ZIP archivu |
-| [`scripts/update-registry.sh`](scripts/update-registry.sh) | Regenerace `registry.json` |
-
-### Požadavky
-
-- `bash`
-- `jq`
-- `zip`
-- `check-jsonschema` nebo `ajv-cli` (pro validaci)
-
-## Release
-
-Plugin se vydává tagem ve formátu `plugins/<id>/v<verze>`:
-
-```bash
-git tag plugins/example-hello-world/v1.0.0
-git push origin plugins/example-hello-world/v1.0.0
+```
+.claude-plugin/
+  marketplace.json              ← index marketplace (povinné)
+plugins/<name>/
+  .claude-plugin/plugin.json    ← manifest pluginu (povinné)
+  skills/<skill-id>/SKILL.md     ← skill (volitelné)
+  .mcp.json                      ← MCP servery (volitelné)
+  README.md, CHANGELOG.md        ← dokumentace
+scripts/
+  validate-marketplace.sh        ← validace marketplace a pluginů
+.github/workflows/
+  validate.yml                   ← CI validace při PR
 ```
 
-CI automaticky sestaví `.plugin` soubor, vytvoří GitHub Release a aktualizuje `registry.json`.
+## Validace
+
+```bash
+./scripts/validate-marketplace.sh
+```
+
+Požadavky: `bash`, `jq`. Na Windows spouštějte přes WSL nebo Git Bash.
 
 ## Licence
 

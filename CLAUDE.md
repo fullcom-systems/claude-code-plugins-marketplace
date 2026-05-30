@@ -4,78 +4,66 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Co je tento repozitář
 
-Interní plugin marketplace pro Claude — katalog a distribuční bod pro tři typy artefaktů:
+Interní **Claude Code plugin marketplace** Fullsys — nativní git-based katalog pluginů. Pluginy nesou:
 
-- **Pluginy** (`.plugin` soubory = ZIP archivy pro Claude Cowork)
-- **MCP servery** (JSON konfigurace)
-- **Skills** (`SKILL.md` soubory s instrukcemi pro Claude)
+- **Skills** (`skills/<id>/SKILL.md` — instrukce pro Claude)
+- **MCP servery** (`.mcp.json` — konfigurace)
 
-Centrální index je `registry.json`, validovaný proti `schema/registry.schema.json`.
-
-## Skripty
-
-Skripty běží v Bash (Linux/macOS/CI). Na Windows spouštěj přes WSL nebo Git Bash.
-
-```bash
-# Validace pluginu (vyžaduje jq, check-jsonschema nebo ajv-cli)
-./scripts/validate-plugin.sh plugins/<id>
-
-# Sestavení .plugin archivu → plugins/<id>/dist/<id>-<version>.plugin
-./scripts/build-plugin.sh plugins/<id>
-
-# Regenerace registry.json ze všech plugin.json
-./scripts/update-registry.sh
-```
-
-Závislosti pro skripty: `jq`, `zip`, `check-jsonschema` (`pip install check-jsonschema`) nebo `ajv-cli`.
+Index marketplace je `.claude-plugin/marketplace.json`.
 
 ## Architektura
 
 ```
-registry.json                  ← strojový index všech pluginů
-schema/
-  plugin.schema.json           ← JSON Schema pro plugin.json každého pluginu
-  registry.schema.json         ← JSON Schema pro registry.json
-plugins/<id>/
-  plugin.json                  ← metadata (povinné)
-  README.md                    ← dokumentace (povinné)
-  CHANGELOG.md                 ← Keep a Changelog formát (povinné)
-  skills/<skill-id>/SKILL.md   ← YAML frontmatter + instrukce pro Claude
-  mcp/                         ← MCP server konfigurace (volitelné)
-  dist/                        ← sestavené .plugin soubory (generuje CI)
+.claude-plugin/
+  marketplace.json                  ← index marketplace (name, owner, plugins[])
+plugins/<name>/
+  .claude-plugin/plugin.json        ← manifest pluginu (povinné pole: name)
+  skills/<skill-id>/SKILL.md         ← skill (YAML frontmatter: name, description)
+  .mcp.json                          ← MCP servery (volitelné)
+  README.md, CHANGELOG.md            ← dokumentace
+scripts/
+  validate-marketplace.sh            ← validace marketplace + pluginů (bash + jq)
 .github/workflows/
-  validate.yml                 ← spouští se při každém PR na main
-  release.yml                  ← spouští se při tagu plugins/<id>/v*.*.*
+  validate.yml                       ← CI validace při PR/push na main
 ```
 
-### Jak funguje release
+## Klíčové principy nativního formátu
 
-Tag ve formátu `plugins/<id>/v<semver>` spustí CI, které:
-1. Validuje plugin
-2. Sestaví `.plugin` ZIP archiv
-3. Vytvoří GitHub Release s archivy jako asset
-4. Aktualizuje a commitne `registry.json`
+- **Distribuce přes Git** — žádné build artefakty ani ZIP archivy. Plugin = adresář v repu.
+- **`marketplace.json`** odkazuje na pluginy přes relativní `source` (`./plugins/<name>`).
+- **`skills/`** se skenuje automaticky — v `plugin.json` se neuvádí.
+- **`commands/`, `agents/`** nahrazují default, pokud jsou v manifestu uvedeny; **`mcpServers`/`hooks`** se merguje.
+- Verze: pokud manifest nemá `version`, Claude Code použije commit SHA.
+
+## Skripty
+
+Skripty běží v Bash (Linux/macOS/CI). Na Windows spouštěj přes WSL nebo Git Bash. Závislost: `jq`.
+
+```bash
+# Validace celého marketplace a všech pluginů
+./scripts/validate-marketplace.sh
+```
 
 ## Konvence
 
 | Oblast | Pravidlo |
 |---|---|
-| Plugin ID | `^[a-z0-9-]+$` — bez mezer, bez velkých písmen |
+| Název pluginu / skillu | `^[a-z0-9-]+$` — bez mezer, bez velkých písmen |
+| `name` v plugin.json | Musí odpovídat názvu adresáře pluginu |
 | Verze | Striktní semver (`MAJOR.MINOR.PATCH`) |
-| Typy pluginu | `skill`, `mcp`, nebo `mixed` |
-| SKILL.md | Musí začínat YAML frontmatter (`---`) s poli `name` a `description` |
+| SKILL.md | Musí začínat YAML frontmatterem (`---`) s poli `name` a `description` |
+| MCP `.mcp.json` | Standardní MCP formát, **nikdy** credentials (použij `env` / správu tajemství) |
 | JSON soubory | Odsazení 2 mezerami, bez trailing comma |
 | Kódování | UTF-8, LF konce řádků (`.gitattributes` to vynucuje) |
 
 ## Přidání nového pluginu
 
-1. Vytvořit `plugins/<id>/` podle vzoru `plugins/example-hello-world/`
-2. Vyplnit `plugin.json` (validovat proti `schema/plugin.schema.json`)
-3. Spustit `./scripts/validate-plugin.sh plugins/<id>`
-4. Spustit `./scripts/update-registry.sh` a commitnout změny v `registry.json`
-5. Otevřít PR — CI automaticky ověří strukturu a konzistenci registry
+1. Vytvořit `plugins/<name>/.claude-plugin/plugin.json` podle vzoru `plugins/example-hello-world/` nebo `plugins/example-mcp/`.
+2. Přidat komponenty (`skills/`, `.mcp.json`).
+3. Zaregistrovat plugin do `.claude-plugin/marketplace.json`.
+4. Spustit `./scripts/validate-marketplace.sh`.
+5. Otevřít PR — CI automaticky ověří strukturu.
 
-## CI workflow
+## Bezpečnost integrací
 
-- **`validate.yml`** — při PR detekuje změněné pluginy, validuje každý zvlášť, validuje `registry.json` a kontroluje, zda je aktuální
-- **`release.yml`** — parsuje tag `plugins/<id>/v<verze>`, sestaví a publikuje release
+Při návrhu integrací s externími systémy platí princip **„no direct outbound calls from skills — use MCP servers"** — skills nevolají externí služby přímo, odchozí provoz jde přes MCP server.

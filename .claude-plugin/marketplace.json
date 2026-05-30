@@ -1,0 +1,21 @@
+{
+  "name": "fullsys-plugins",
+  "owner": {
+    "name": "Fullsys",
+    "email": "ladislav.filip@fullsys.cz"
+  },
+  "description": "Interní katalog Claude Code pluginů Fullsys (skills a MCP servery).",
+  "version": "1.0.0",
+  "plugins": [
+    {
+      "name": "example-hello-world",
+      "source": "./plugins/example-hello-world",
+      "description": "Ukázkový plugin demonstrující strukturu marketplace repozitáře. Obsahuje jeden jednoduchý Skill."
+    },
+    {
+      "name": "example-mcp",
+      "source": "./plugins/example-mcp",
+      "description": "Ukázkový plugin demonstrující distribuci konfigurace MCP serveru. Obsahuje jeden referenční MCP server."
+    }
+  ]
+}
