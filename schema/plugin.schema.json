@@ -90,15 +90,30 @@
       "items": {
         "type": "object",
         "required": ["id", "name"],
-        "additionalProperties": true,
+        "additionalProperties": false,
         "properties": {
           "id": {
             "type": "string",
-            "pattern": "^[a-z0-9-]+$"
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Unikátní identifikátor MCP serveru v rámci pluginu"
           },
           "name": {
             "type": "string",
             "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "transport": {
+            "type": "string",
+            "enum": ["stdio", "sse", "http"],
+            "description": "Způsob komunikace s MCP serverem"
+          },
+          "config": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Cesta ke konfiguračnímu JSON souboru serveru relativně ke kořeni pluginu (typicky mcp/<id>.json)"
           }
         }
       }

@@ -54,14 +54,29 @@ if [[ -z "$PLUGIN_VERSION" || "$PLUGIN_VERSION" == "null" ]]; then
   exit 1
 fi
 
-OUTPUT_FILE="${DIST_DIR}/${PLUGIN_ID}-${PLUGIN_VERSION}.plugin"
-
 mkdir -p "$DIST_DIR"
+
+# Absolutní cesta k výstupu, aby fungovala i při relativní nebo absolutní
+# cestě k pluginu a nezávisela na aktuálním adresáři uvnitř subshellu.
+OUTPUT_FILE="$(cd "$DIST_DIR" && pwd)/${PLUGIN_ID}-${PLUGIN_VERSION}.plugin"
+
+# Odstraň případný předchozí archiv, aby zip neaktualizoval starý obsah.
+rm -f "$OUTPUT_FILE"
 
 # ZIP ze všech souborů pluginu kromě dist/
 (
   cd "$PLUGIN_DIR"
-  zip -r -q "$OLDPWD/$OUTPUT_FILE" . -x "dist/*" -x "dist"
+  zip -r -q "$OUTPUT_FILE" . -x "dist/*" -x "dist"
+)
+
+# Nahraď plugin.json v archivu verzí bez interního "$schema" odkazu,
+# který se uvnitř .plugin archivu stejně nikam nerozbalí.
+TMP_DIR="$(mktemp -d)"
+trap 'rm -rf "$TMP_DIR"' EXIT
+jq 'del(."$schema")' "$PLUGIN_JSON" > "${TMP_DIR}/plugin.json"
+(
+  cd "$TMP_DIR"
+  zip -q "$OUTPUT_FILE" plugin.json
 )
 
 FILE_SIZE="$(wc -c < "$OUTPUT_FILE" | tr -d ' ')"

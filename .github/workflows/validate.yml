@@ -24,10 +24,10 @@ jobs:
         run: |
           BASE="${{ github.event.pull_request.base.sha }}"
           HEAD="${{ github.event.pull_request.head.sha }}"
-          CHANGED=$(git diff --name-only "$BASE" "$HEAD" | grep '^plugins/' | cut -d/ -f2 | sort -u || true)
-          if [ -z "$CHANGED" ]; then
+          CHANGED=$(git diff --name-only "$BASE" "$HEAD" | grep '^plugins/' | cut -d/ -f2 | sort -u | tr '\n' ' ' || true)
+          if [ -z "${CHANGED// /}" ]; then
             echo "Žádné změny v plugins/ — validuji všechny pluginy"
-            CHANGED=$(find plugins -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort || true)
+            CHANGED=$(find plugins -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort | tr '\n' ' ' || true)
           fi
           echo "plugins=${CHANGED}" >> "$GITHUB_OUTPUT"
           echo "Pluginy k validaci: ${CHANGED:-žádné}"

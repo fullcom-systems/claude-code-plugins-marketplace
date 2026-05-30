@@ -20,7 +20,35 @@
       "path": "plugins/example-hello-world",
       "distFile": "plugins/example-hello-world/dist/example-hello-world-1.0.0.plugin",
       "readme": "plugins/example-hello-world/README.md",
-      "changelog": "plugins/example-hello-world/CHANGELOG.md"
+      "changelog": "plugins/example-hello-world/CHANGELOG.md",
+      "mcpServers": []
+    },
+    {
+      "id": "example-mcp",
+      "name": "Example MCP Server",
+      "version": "1.0.0",
+      "description": "Ukázkový plugin demonstrující distribuci konfigurace MCP serveru přes marketplace. Obsahuje jeden referenční MCP server.",
+      "author": "Fullsys",
+      "tags": [
+        "example",
+        "template",
+        "mcp"
+      ],
+      "types": [
+        "mcp"
+      ],
+      "minClaudeVersion": null,
+      "path": "plugins/example-mcp",
+      "distFile": "plugins/example-mcp/dist/example-mcp-1.0.0.plugin",
+      "readme": "plugins/example-mcp/README.md",
+      "changelog": "plugins/example-mcp/CHANGELOG.md",
+      "mcpServers": [
+        {
+          "id": "everything",
+          "name": "Everything (demo) MCP Server",
+          "transport": "stdio"
+        }
+      ]
     }
   ]
 }

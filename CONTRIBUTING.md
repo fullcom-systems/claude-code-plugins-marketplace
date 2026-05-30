@@ -42,6 +42,30 @@ plugins/<id>/
 | SKILL.md | YAML frontmatter s `name` a `description` |
 | Typy pluginu | `skill`, `mcp`, nebo `mixed` |
 
+## MCP servery
+
+Plugin typu `mcp` (nebo `mixed`) deklaruje MCP servery v poli `mcpServers` v `plugin.json`:
+
+```json
+"mcpServers": [
+  {
+    "id": "everything",
+    "name": "Everything (demo) MCP Server",
+    "description": "Krátký popis serveru.",
+    "transport": "stdio",
+    "config": "mcp/everything.json"
+  }
+]
+```
+
+- `id` — `[a-z0-9-]`, unikátní v rámci pluginu.
+- `transport` — `stdio`, `sse` nebo `http`.
+- `config` — cesta ke konfiguračnímu JSON souboru serveru, typicky `mcp/<id>.json`. Validace ověří, že soubor existuje a je validní JSON.
+
+**Bezpečnost:** do `mcp/*.json` nikdy nezapisujte credentials (connection stringy, API klíče, tokeny). Předávejte je přes proměnné prostředí (pole `env`) nebo přes správu tajemství klienta. Platí princip **„no direct outbound calls from skills — use MCP servers"** — odchozí volání patří do MCP serveru, ne do skillu.
+
+Referenční šablonu najdete v [`plugins/example-mcp/`](plugins/example-mcp/).
+
 ## Postup pro nový plugin
 
 1. **Fork a větev** — vytvořte feature větev z `main`.
@@ -68,6 +92,7 @@ plugins/<id>/
 
 - [ ] `plugin.json` prochází validací proti schématu
 - [ ] Všechny cesty v `skills[].path` existují
+- [ ] Všechny cesty v `mcpServers[].config` existují a jsou validní JSON (bez credentials)
 - [ ] README.md a CHANGELOG.md jsou kompletní
 - [ ] `registry.json` je aktuální (spuštěn `update-registry.sh`)
 - [ ] Plugin ID je unikátní v rámci repozitáře

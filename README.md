@@ -31,7 +31,9 @@ Spusťte ukázkový plugin a napište `hello world` — skill zobrazí diagnosti
 
 ## Jak přidat nový plugin
 
-1. Vytvořte adresář `plugins/<id>/` podle šablony [`plugins/example-hello-world/`](plugins/example-hello-world/).
+1. Vytvořte adresář `plugins/<id>/` podle vhodné šablony:
+   - skill plugin → [`plugins/example-hello-world/`](plugins/example-hello-world/)
+   - MCP plugin → [`plugins/example-mcp/`](plugins/example-mcp/)
 2. Vyplňte povinné soubory: `plugin.json`, `README.md`, `CHANGELOG.md`.
 3. Spusťte validaci:
 

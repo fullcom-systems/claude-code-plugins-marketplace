@@ -62,7 +62,8 @@
             "items": {
               "type": "string",
               "minLength": 1
-            }
+            },
+            "uniqueItems": true
           },
           "types": {
             "type": "array",
@@ -70,7 +71,8 @@
             "items": {
               "type": "string",
               "enum": ["skill", "mcp", "mixed"]
-            }
+            },
+            "uniqueItems": true
           },
           "minClaudeVersion": {
             "type": ["string", "null"]
@@ -90,6 +92,28 @@
           "changelog": {
             "type": "string",
             "minLength": 1
+          },
+          "mcpServers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "name"],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9-]+$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "transport": {
+                  "type": ["string", "null"],
+                  "enum": ["stdio", "sse", "http", null]
+                }
+              }
+            }
           }
         }
       }

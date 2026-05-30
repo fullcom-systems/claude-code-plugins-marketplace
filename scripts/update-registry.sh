@@ -41,6 +41,7 @@ build_registry() {
       tags="$(jq -c '.tags // []' "$plugin_json")"
       types="$(jq -c '.types' "$plugin_json")"
       min_claude="$(jq -c '.minClaudeVersion // null' "$plugin_json")"
+      mcp_servers="$(jq -c '[.mcpServers[]? | {id, name, transport: (.transport // null)}]' "$plugin_json")"
 
       local dist_file="${relative_path}/dist/${id}-${version}.plugin"
       local readme="${relative_path}/README.md"
@@ -60,6 +61,7 @@ build_registry() {
         --arg distFile "$dist_file" \
         --arg readme "$readme" \
         --arg changelog "$changelog" \
+        --argjson mcpServers "$mcp_servers" \
         '{
           id: $id,
           name: $name,
@@ -72,7 +74,8 @@ build_registry() {
           path: $path,
           distFile: $distFile,
           readme: $readme,
-          changelog: $changelog
+          changelog: $changelog,
+          mcpServers: $mcpServers
         }')"
 
       plugins_json="$(jq --argjson entry "$entry" '. + [$entry]' <<<"$plugins_json")"
