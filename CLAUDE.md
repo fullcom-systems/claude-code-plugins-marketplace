@@ -4,7 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Co je tento repozitář
 
-Interní **Claude Code plugin marketplace** Fullsys — nativní git-based katalog pluginů. Pluginy nesou:
+Interní **Claude Code plugin marketplace** Fullsys — nativní git-based katalog pluginů.
+
+> Určeno pro **Claude Code** (`/plugin`), **nikoli pro Claude Cowork**. Distribuce probíhá nativně přes Git, ne jako `.plugin` ZIP archivy.
+
+Pluginy nesou:
 
 - **Skills** (`skills/<id>/SKILL.md` — instrukce pro Claude)
 - **MCP servery** (`.mcp.json` — konfigurace)

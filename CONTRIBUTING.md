@@ -2,6 +2,9 @@
 
 Děkujeme za zájem o rozšíření katalogu pluginů. Tento dokument popisuje pravidla a postup pro přidání nebo aktualizaci Claude Code pluginu.
 
+> [!NOTE]
+> Pluginy zde jsou pro **Claude Code** (`/plugin`), **ne pro Claude Cowork**. Žádné `.plugin` archivy — plugin je adresář v repu distribuovaný přes Git.
+
 ## Požadavky
 
 - Git

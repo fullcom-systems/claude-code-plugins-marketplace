@@ -2,6 +2,11 @@
 
 Interní katalog Claude Code pluginů Fullsys — **skills** a **MCP servery**, distribuované nativně přes Git.
 
+> [!IMPORTANT]
+> Tento repozitář je marketplace pro **Claude Code** (příkaz `/plugin`), **nikoli pro Claude Cowork**.
+> Pluginy se distribuují **nativně přes Git** — žádné `.plugin` ZIP archivy ani build/release krok.
+> Přidáte ho přes `/plugin marketplace add` a instalujete přes `/plugin install`.
+
 ## Co obsahuje
 
 | Typ artefaktu | Popis |
