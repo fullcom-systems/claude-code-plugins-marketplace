@@ -16,6 +16,11 @@
       "name": "example-mcp",
       "source": "./plugins/example-mcp",
       "description": "Ukázkový plugin demonstrující distribuci konfigurace MCP serveru. Obsahuje jeden referenční MCP server."
+    },
+    {
+      "name": "docs-architect",
+      "source": "./plugins/docs-architect",
+      "description": "Tvorba a údržba technické dokumentace repozitáře (README, CONTRIBUTING, CHANGELOG, API specifikace, architektura, deployment guide) – čitelné pro lidi, nativní v GitHubu, parsovatelné pro RAG/AI."
     }
   ]
 }
