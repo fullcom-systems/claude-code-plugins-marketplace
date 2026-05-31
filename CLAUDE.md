@@ -68,6 +68,18 @@ Skripty běží v Bash (Linux/macOS/CI). Na Windows spouštěj přes WSL nebo Gi
 4. Spustit `./scripts/validate-marketplace.sh`.
 5. Otevřít PR — CI automaticky ověří strukturu.
 
+## Odinstalace pluginu
+
+```
+/plugin uninstall <name>
+```
+
+Pro odebrání celého marketplace (zdrojového repozitáře):
+
+```
+/plugin marketplace remove fullsys-plugins
+```
+
 ## Bezpečnost integrací
 
 Při návrhu integrací s externími systémy platí princip **„no direct outbound calls from skills — use MCP servers"** — skills nevolají externí služby přímo, odchozí provoz jde přes MCP server.
