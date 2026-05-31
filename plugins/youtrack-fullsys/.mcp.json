@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "youtrack": {
+      "type": "http",
+      "url": "https://youtrack.fullsys.cz/mcp",
+      "headers": {
+        "Authorization": "Bearer ${YT_FULLSYS_TOKEN}"
+      }
+    }
+  }
+}

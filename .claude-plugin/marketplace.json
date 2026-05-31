@@ -21,6 +21,11 @@
       "name": "docs-architect",
       "source": "./plugins/docs-architect",
       "description": "Tvorba a údržba technické dokumentace repozitáře (README, CONTRIBUTING, CHANGELOG, API specifikace, architektura, deployment guide) – čitelné pro lidi, nativní v GitHubu, parsovatelné pro RAG/AI."
+    },
+    {
+      "name": "youtrack-fullsys",
+      "source": "./plugins/youtrack-fullsys",
+      "description": "MCP plugin pro napojení na interní YouTrack Fullsys (tickety, projekty, boardy, knowledge base) přes HTTP MCP server."
     }
   ]
 }
