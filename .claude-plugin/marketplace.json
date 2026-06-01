@@ -31,6 +31,11 @@
       "name": "repo-architect",
       "source": "./plugins/repo-architect",
       "description": "GitHub Repository Architect — analyzuje, navrhuje a opravuje strukturu složek a souborů v GitHub repozitáři dle open-source best-practice standardů. Skill s režimy analyze / new / fix."
+    },
+    {
+      "name": "ai-agnostic-setup",
+      "source": "./plugins/ai-agnostic-setup",
+      "description": "Správa AI agnostického prostředí – synchronizace instrukcí, skills a MCP serverů mezi Claude Code, Cursor a GitHub Copilot bez ručního kopírování. Nastavení po klonu, diagnostika, přidání nového agenta."
     }
   ]
 }

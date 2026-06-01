@@ -12,6 +12,8 @@ Interní katalog Claude Code pluginů Fullsys — **skills** a **MCP servery**, 
 | Plugin | Typ | Popis |
 |---|---|---|
 | [docs-architect](plugins/docs-architect/) | skill | Tvorba a údržba technické dokumentace repozitáře (README, CONTRIBUTING, CHANGELOG, API spec, architektura) |
+| [repo-architect](plugins/repo-architect/) | skill | Analýza, návrh a oprava struktury složek a souborů GitHub repozitáře dle open-source best-practice standardů |
+| [ai-agnostic-setup](plugins/ai-agnostic-setup/) | skill + scripty | Synchronizace instrukcí, skills a MCP serverů mezi Claude Code, Cursor a GitHub Copilot; nastavení po klonu, diagnostika |
 | [youtrack-fullsys](plugins/youtrack-fullsys/) | MCP | Napojení na interní YouTrack Fullsys — tickety, projekty, boardy, knowledge base |
 | [example-hello-world](plugins/example-hello-world/) | skill | Ukázkový plugin demonstrující strukturu marketplace repozitáře |
 | [example-mcp](plugins/example-mcp/) | MCP | Ukázkový plugin demonstrující distribuci konfigurace MCP serveru |
