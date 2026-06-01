@@ -15,8 +15,6 @@ Interní katalog Claude Code pluginů Fullsys — **skills** a **MCP servery**, 
 | [repo-architect](plugins/repo-architect/) | skill | Analýza, návrh a oprava struktury složek a souborů GitHub repozitáře dle open-source best-practice standardů |
 | [ai-agnostic-setup](plugins/ai-agnostic-setup/) | skill + scripty | Synchronizace instrukcí, skills a MCP serverů mezi Claude Code, Cursor a GitHub Copilot; nastavení po klonu, diagnostika |
 | [youtrack-fullsys](plugins/youtrack-fullsys/) | MCP | Napojení na interní YouTrack Fullsys — tickety, projekty, boardy, knowledge base |
-| [example-hello-world](plugins/example-hello-world/) | skill | Ukázkový plugin demonstrující strukturu marketplace repozitáře |
-| [example-mcp](plugins/example-mcp/) | MCP | Ukázkový plugin demonstrující distribuci konfigurace MCP serveru |
 
 ## Co obsahuje
 
@@ -42,7 +40,7 @@ V Claude Code:
 ### Instalace pluginu
 
 ```
-/plugin install example-hello-world@fullsys-plugins
+/plugin install docs-architect@fullsys-plugins
 ```
 
 Dostupné pluginy zobrazíte přes `/plugin` nebo v [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json).
@@ -50,7 +48,7 @@ Dostupné pluginy zobrazíte přes `/plugin` nebo v [`.claude-plugin/marketplace
 ### Odinstalace pluginu
 
 ```
-/plugin uninstall example-hello-world
+/plugin uninstall docs-architect
 ```
 
 Chcete-li odebrat i samotný marketplace (zdrojový repozitář), spusťte:
@@ -59,15 +57,9 @@ Chcete-li odebrat i samotný marketplace (zdrojový repozitář), spusťte:
 /plugin marketplace remove fullsys-plugins
 ```
 
-### Ověření funkčnosti
-
-Po instalaci `example-hello-world` napište `hello world` — skill zobrazí diagnostické informace.
-
 ## Jak přidat nový plugin
 
-1. Vytvořte adresář `plugins/<name>/` podle vhodné šablony:
-   - skill plugin → [`plugins/example-hello-world/`](plugins/example-hello-world/)
-   - MCP plugin → [`plugins/example-mcp/`](plugins/example-mcp/)
+1. Vytvořte adresář `plugins/<name>/` a zkopírujte strukturu existujícího pluginu jako šablonu.
 2. Vyplňte `plugins/<name>/.claude-plugin/plugin.json` (povinné je jen pole `name`).
 3. Přidejte komponenty:
    - skills → `skills/<skill-id>/SKILL.md`
