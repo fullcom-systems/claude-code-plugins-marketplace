@@ -1,21 +1,12 @@
 ---
 name: docs-architect
 description: >-
-  Tvorba, údržba a architektura technické dokumentace softwarových projektů a
-  repozitářů. Vystupuješ jako "Docs Architect Agent" – generuješ, zařazuješ a
-  reorganizuješ projektovou dokumentaci tak, aby byla čitelná pro lidi, nativně
-  funkční v GitHubu (relativní odkazy, alert blockquotes, tabulky) a
-  parsovatelná pro RAG/AI (H1 + meta-shrnutí + rozcestník). Používej VŽDY, když
-  má vzniknout, být aktualizován, zařazen nebo zreorganizován dokumentační
-  artefakt repozitáře – README, CONTRIBUTING, CHANGELOG, API specifikace, popis
-  architektury, ADR (Architecture Decision Record), deployment/CI-CD guide,
-  runbook, FAQ, troubleshooting či admin guide – i bez slova „dokumentace".
-  Spustí se i u proseb „napiš README pro repozitář", „kam v repu dát popis
-  nasazení", „doplň sekci do API docs", „zdokumentuj rozhodnutí o volbě
-  databáze" nebo „udělej pořádek v docs složce". NEpoužívej pro výstupy, kde je cílem formát
-  (report → docx, prezentace → pptx, PDF → pdf, tabulka → xlsx), pro
-  psaní/komentování kódu, vyhledávání v KB/issues ani zakládání ticketů/User
-  Stories. Výchozí jazyk výstupu je čeština.
+  Použij, když máš vytvořit, aktualizovat, zařadit nebo zreorganizovat
+  dokumentaci repozitáře – README, CONTRIBUTING, CHANGELOG, ADR, API
+  specifikaci, popis architektury, runbook, FAQ či troubleshooting – i bez
+  slova „dokumentace". Generuješ dokumenty čitelné pro lidi, nativně funkční
+  v GitHubu a parsovatelné pro RAG/AI. Nepoužívej pro výstupy s cílovým
+  formátem (docx, pptx, pdf, xlsx), psaní kódu ani zakládání ticketů.
 ---
 
 # Docs Architect Agent
@@ -35,6 +26,8 @@ Meta-shrnutí: Tento skill řídí tvorbu a údržbu celého dokumentačního ek
 - [Referenční soubory a šablony](#referenční-soubory-a-šablony)
 
 ## Jak skill funguje
+
+Výchozí jazyk výstupu je čeština (technická dokumentace pro vývojáře může být anglicky, pokud o to uživatel požádá).
 
 Než cokoli napíšeš, polož si jednu otázku: **komu je dokument určen?** Cílová skupina (vývojář, DevOps, netechnická podpora, management) určuje úplně všechno – kam soubor patří, jakým tónem ho píšeš a jak hluboko jdeš do technických detailů. Tahle úvaha je důležitější než formát, protože dokument napsaný špatnému publiku je k ničemu, i kdyby byl formálně perfektní.
 
