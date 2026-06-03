@@ -19,6 +19,7 @@ moje-aplikace/
 ├── CHANGELOG.md              # 6. Historie změn (formát Keep a Changelog)
 ├── CONTRIBUTING.md           # 2. Onboarding pro vývojáře (zprovoznění, git flow)
 ├── docs/                     # Hlavní složka pro veškerou detailní dokumentaci
+│   ├── adr/                  # 8. Architekturní rozhodnutí (ADR: 0001-nazev.md + index README.md)
 │   ├── development/          # 5. Vývojářská dokumentace (architektura, API, byznys logika)
 │   ├── devops/               # 3. DevOps a CI/CD (nasazení, pipelines, infrastruktura)
 │   ├── support/              # 4. Netechnická podpora (FAQ, troubleshooting, admin guide)
@@ -27,7 +28,7 @@ moje-aplikace/
 ```
 
 > [!IMPORTANT]
-> Tato struktura je závazná. Nevytvářej alternativní složky (`documentation/`, `wiki/`, `help/`) – dokumentace patří do `docs/` a jejích čtyř podsložek. Když obsah nikam nesedí, jde do `docs/misc/`, ne do nově vymyšlené složky.
+> Tato struktura je závazná. Nevytvářej alternativní složky (`documentation/`, `wiki/`, `help/`) – dokumentace patří do `docs/` a jejích pěti podsložek. Když obsah nikam nesedí, jde do `docs/misc/`, ne do nově vymyšlené složky.
 
 ## Význam jednotlivých složek
 
@@ -36,6 +37,7 @@ moje-aplikace/
 | `README.md` (kořen) | Všichni | Co projekt dělá, jak začít, globální rozcestník | Stručný, zvoucí |
 | `CONTRIBUTING.md` (kořen) | Vývojář (nový) | Zprovoznění lokálně, git flow, konvence, jak přispět | Technický, návodný |
 | `CHANGELOG.md` (kořen) | Všichni | Historie verzí dle [Keep a Changelog](https://keepachangelog.com/cs/) | Stručný, faktický |
+| `docs/adr/` | Vývojář / architekt | Architekturní rozhodnutí (ADR) – kontext, rozhodnutí, důsledky, alternativy (viz [`adr.md`](./adr.md)) | Faktický, technický |
 | `docs/development/` | Vývojář | Architektura, API specifikace, datový model, byznys logika | Úderný, technický, hodně kódu |
 | `docs/devops/` | DevOps | Nasazení, CI/CD pipelines, infrastruktura, monitoring | Úderný, přesné příkazy |
 | `docs/support/` | Netechnická podpora | FAQ, troubleshooting, admin guide, postupy krok za krokem | Polopatický, bez žargonu |
@@ -54,6 +56,7 @@ Rozcestník (routing) je vstupní bod složky, který čtenáře a AI nástroje 
 ## Dokumentace
 
 - [Pro vývojáře](./docs/development/README.md) – architektura, API, byznys logika
+- [Architekturní rozhodnutí](./docs/adr/README.md) – ADR záznamy
 - [DevOps a nasazení](./docs/devops/README.md) – pipelines, infrastruktura
 - [Pro podporu](./docs/support/README.md) – FAQ, troubleshooting, admin guide
 - [Jak přispět](./CONTRIBUTING.md) – zprovoznění a git flow

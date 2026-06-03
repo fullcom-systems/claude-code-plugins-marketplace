@@ -13,7 +13,7 @@ Plugin pro Fullsys Claude Code Plugin Marketplace. Přináší skill `docs-archi
 
 ## Co plugin obsahuje
 
-Jeden skill `docs-architect`, který se aktivuje vždy, když má vzniknout, být aktualizován nebo zreorganizován dokumentační artefakt – README, CONTRIBUTING, CHANGELOG, API specifikace, popis architektury, deployment/CI-CD guide, runbook, FAQ či troubleshooting.
+Jeden skill `docs-architect`, který se aktivuje vždy, když má vzniknout, být aktualizován nebo zreorganizován dokumentační artefakt – README, CONTRIBUTING, CHANGELOG, API specifikace, popis architektury, ADR (Architecture Decision Record), deployment/CI-CD guide, runbook, FAQ či troubleshooting.
 
 Skill stojí na třech pilířích:
 
@@ -22,6 +22,8 @@ Skill stojí na třech pilířích:
 3. **GitHub-friendly formát** – relativní odkazy, tabulky, alert blockquotes, Mermaid diagramy.
 
 Součástí jsou referenční pravidla (`references/`) a šablony dokumentů (`assets/`).
+
+Skill navíc umí dokumentovat **architekturní rozhodnutí formou ADR** ve složce `docs/adr/` – sekvenčně číslované záznamy (`0001-nazev.md`) s kontextem, rozhodnutím, důsledky a zváženými alternativami, životním cyklem přes pole `Status` (Proposed → Accepted → Deprecated / Superseded by ADR-XXXX) a indexem v `README.md`. ADR se nikdy nemažou – superseded záznamy zůstávají v historii.
 
 ## Instalace
 
@@ -39,6 +41,7 @@ Skill se spouští automaticky podle kontextu. Stačí Claude požádat napřík
 - „Napiš README pro tento repozitář."
 - „Kam v repu dát popis nasazení?"
 - „Doplň sekci o autentizaci do API docs."
+- „Zdokumentuj rozhodnutí o volbě message brokeru jako ADR."
 - „Udělej pořádek v docs složce."
 
 Skill určí cílovou skupinu dokumentu, zařadí ho do správné složky, zvolí odpovídající tón a zapojí ho do rozcestníků.

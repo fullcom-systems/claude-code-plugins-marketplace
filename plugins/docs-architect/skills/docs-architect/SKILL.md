@@ -8,10 +8,11 @@ description: >-
   parsovatelná pro RAG/AI (H1 + meta-shrnutí + rozcestník). Používej VŽDY, když
   má vzniknout, být aktualizován, zařazen nebo zreorganizován dokumentační
   artefakt repozitáře – README, CONTRIBUTING, CHANGELOG, API specifikace, popis
-  architektury, deployment/CI-CD guide, runbook, FAQ, troubleshooting či admin
-  guide – i bez slova „dokumentace". Spustí se i u proseb „napiš README pro
-  repozitář", „kam v repu dát popis nasazení", „doplň sekci do API docs" nebo
-  „udělej pořádek v docs složce". NEpoužívej pro výstupy, kde je cílem formát
+  architektury, ADR (Architecture Decision Record), deployment/CI-CD guide,
+  runbook, FAQ, troubleshooting či admin guide – i bez slova „dokumentace".
+  Spustí se i u proseb „napiš README pro repozitář", „kam v repu dát popis
+  nasazení", „doplň sekci do API docs", „zdokumentuj rozhodnutí o volbě
+  databáze" nebo „udělej pořádek v docs složce". NEpoužívej pro výstupy, kde je cílem formát
   (report → docx, prezentace → pptx, PDF → pdf, tabulka → xlsx), pro
   psaní/komentování kódu, vyhledávání v KB/issues ani zakládání ticketů/User
   Stories. Výchozí jazyk výstupu je čeština.
@@ -28,6 +29,7 @@ Meta-shrnutí: Tento skill řídí tvorbu a údržbu celého dokumentačního ek
 - [Workflow: tvorba nového dokumentu](#workflow-tvorba-nového-dokumentu)
 - [Workflow: aktualizace existujícího dokumentu](#workflow-aktualizace-existujícího-dokumentu)
 - [Workflow: reorganizace dokumentace](#workflow-reorganizace-dokumentace)
+- [Workflow: architekturní rozhodnutí (ADR)](#workflow-architekturní-rozhodnutí-adr)
 - [Kam co patří (rozhodovací tabulka)](#kam-co-patří-rozhodovací-tabulka)
 - [Kontrolní checklist před odevzdáním](#kontrolní-checklist-před-odevzdáním)
 - [Referenční soubory a šablony](#referenční-soubory-a-šablony)
@@ -84,6 +86,18 @@ Když máš zařadit hromadu existujících souborů nebo „udělat pořádek":
 4. **Oprav relativní odkazy**, které se přesunem souborů rozbily.
 5. Navrhni výsledek jako Mermaid strom nebo tabulku, ať uživatel vidí cílovou strukturu, než ji vytvoříš.
 
+## Workflow: architekturní rozhodnutí (ADR)
+
+Architekturní rozhodnutí (volba technologie, integračního vzoru, obtížně vratné změny) se dokumentují jako **ADR** – jeden Markdown soubor na jedno rozhodnutí ve složce `docs/adr/`. Každý záznam zachycuje kontext, samotné rozhodnutí, důsledky (pozitivní i negativní) a zvážené alternativy.
+
+1. **Nový ADR:** zjisti nejvyšší existující číslo v `docs/adr/` a vytvoř soubor `XXXX-nazev.md` (sekvenční čtyřmístné číslo) podle šablony [`assets/adr-template.md`](./assets/adr-template.md).
+2. **Status vyjadřuje životní cyklus:** `Proposed` → `Accepted` → `Deprecated` / `Superseded by ADR-XXXX`.
+3. **Nahrazení rozhodnutí = nový ADR**, ne úprava starého. Starému jen změň Status na `Superseded by ADR-XXXX` s odkazem na náhradu.
+4. **Aktualizuj index** – `docs/adr/README.md` je rozcestník všech rozhodnutí (číslo, název, status).
+
+> [!CAUTION]
+> ADR se **nikdy nemažou ani obsahově nepřepisují** – superseded záznamy zůstávají v historii. Detailní pravidla (struktura záznamu, životní cyklus, formát indexu) jsou v [`references/adr.md`](./references/adr.md).
+
 ## Kam co patří (rozhodovací tabulka)
 
 | Typ obsahu | Cílová skupina | Soubor / složka |
@@ -93,6 +107,7 @@ Když máš zařadit hromadu existujících souborů nebo „udělat pořádek":
 | Historie změn (formát Keep a Changelog) | Všichni | `CHANGELOG.md` (kořen) |
 | Architektura, byznys logika, datový model | Vývojář | `docs/development/` |
 | API specifikace, kontrakty, příklady volání | Vývojář / integrátor | `docs/development/` |
+| Architekturní rozhodnutí (ADR) | Vývojář / architekt | `docs/adr/` (`0001-nazev.md` + index `README.md`) |
 | Nasazení, CI/CD pipelines, infrastruktura | DevOps | `docs/devops/` |
 | FAQ, troubleshooting, admin guide bez žargonu | Netechnická podpora | `docs/support/` |
 | Cokoli nezařaditelného | – | `docs/misc/` |
@@ -126,8 +141,10 @@ Tělo SKILL.md schválně neobsahuje všechna pravidla – drží se pod ~250 ř
 |---|---|
 | [`references/struktura-repozitare.md`](./references/struktura-repozitare.md) | Závazná adresářová struktura, princip rozcestníků, kam co zařadit |
 | [`references/formatovani.md`](./references/formatovani.md) | Pravidla GitHub Markdownu: alerty, tabulky, ToC, kotvy s diakritikou, Mermaid, code blocks |
+| [`references/adr.md`](./references/adr.md) | Pravidla ADR: struktura záznamu, číslování, životní cyklus (Status), index |
 | [`references/tone-of-voice.md`](./references/tone-of-voice.md) | Jak psát pro každou cílovou skupinu, příklady „špatně vs. dobře" |
 | [`assets/dokument-template.md`](./assets/dokument-template.md) | Obecná šablona dokumentu (H1 + meta-shrnutí + ToC + tělo) |
 | [`assets/README-template.md`](./assets/README-template.md) | Šablona kořenového README (globální rozcestník) |
 | [`assets/CONTRIBUTING-template.md`](./assets/CONTRIBUTING-template.md) | Šablona onboardingu pro vývojáře |
 | [`assets/CHANGELOG-template.md`](./assets/CHANGELOG-template.md) | Šablona CHANGELOG ve formátu Keep a Changelog |
+| [`assets/adr-template.md`](./assets/adr-template.md) | Šablona ADR záznamu (kontext, rozhodnutí, důsledky, alternativy) |

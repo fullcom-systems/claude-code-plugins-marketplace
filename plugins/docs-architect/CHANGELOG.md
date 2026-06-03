@@ -5,6 +5,15 @@ Všechny významné změny v tomto projektu budou dokumentovány v tomto souboru
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)
 a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
+## [1.1.0] - 2026-06-03
+
+### Added
+
+- Podpora ADR (Architecture Decision Records) ve složce `docs/adr/`
+- Referenční pravidla `references/adr.md` (struktura záznamu, sekvenční číslování, životní cyklus Proposed → Accepted → Deprecated / Superseded, index v README.md)
+- Šablona `assets/adr-template.md` (kontext, rozhodnutí, důsledky, zvážené alternativy)
+- Workflow pro ADR v SKILL.md a `docs/adr/` v závazné struktuře repozitáře
+
 ## [1.0.0] - 2026-05-30
 
 ### Added

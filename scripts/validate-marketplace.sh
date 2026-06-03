@@ -72,6 +72,7 @@ while IFS=$'\t' read -r p_name p_source; do
   fi
 
   echo "  OK"
-done < <(jq -r '.plugins[] | [.name, .source] | @tsv' "$MARKETPLACE")
+# tr -d '\r': windowsový jq.exe vypisuje CRLF — bez očištění by cesty končily \r
+done < <(jq -r '.plugins[] | [.name, .source] | @tsv' "$MARKETPLACE" | tr -d '\r')
 
 echo "Marketplace prošel validací."
