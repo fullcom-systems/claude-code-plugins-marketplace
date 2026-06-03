@@ -1,9 +1,12 @@
 ---
 name: repo-architect
-description: |
-  GitHub Repository Architect — analyzuje, navrhuje a opravuje strukturu složek a souborů
-  v GitHub repozitáři dle open-source best-practice standardů.
-  Generuje vizuální strom složek, hodnotí existující strukturu a doporučuje přesuny/přejmenování.
+description: >-
+  Použij, když máš analyzovat, navrhnout nebo opravit strukturu složek a
+  souborů repozitáře – třeba u proseb „zhodnoť strukturu repa", „navrhni
+  skeleton pro nový projekt" nebo „udělej pořádek v adresářích". Hodnotíš
+  existující strukturu dle open-source best-practice standardů, generuješ
+  vizuální strom složek a doporučuješ přesuny či přejmenování. Nepoužívej
+  pro psaní obsahu dokumentace ani kódu.
 user-invocable: true
 argument-hint: [analyze | new <jazyk/framework> | fix]
 ---
