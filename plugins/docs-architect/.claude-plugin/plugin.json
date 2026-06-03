@@ -1,7 +1,7 @@
 {
   "name": "docs-architect",
   "description": "Tvorba, údržba a architektura technické dokumentace repozitáře (README, CONTRIBUTING, CHANGELOG, API specifikace, architektura, ADR, deployment guide) – čitelné pro lidi, nativní v GitHubu, parsovatelné pro RAG/AI.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": {
     "name": "Fullsys",
     "email": "ladislav.filip@fullsys.cz"

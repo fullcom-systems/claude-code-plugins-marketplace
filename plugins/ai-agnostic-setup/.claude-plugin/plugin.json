@@ -1,7 +1,7 @@
 {
   "name": "ai-agnostic-setup",
   "description": "Správa AI agnostického prostředí – synchronizace instrukcí, skills a MCP serverů mezi Claude Code, Cursor a GitHub Copilot bez ručního kopírování. Nastavení po klonu, diagnostika, přidání nového agenta.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Fullsys",
     "email": "ladislav.filip@fullsys.cz"

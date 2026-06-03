@@ -55,6 +55,7 @@ Skripty běží v Bash (Linux/macOS/CI). Na Windows spouštěj přes WSL nebo Gi
 | Název pluginu / skillu | `^[a-z0-9-]+$` — bez mezer, bez velkých písmen |
 | `name` v plugin.json | Musí odpovídat názvu adresáře pluginu |
 | Verze | Striktní semver (`MAJOR.MINOR.PATCH`) |
+| Změna pluginu | Po **každé** změně pluginu povýšit `version` v `plugin.json` a doplnit záznam do `CHANGELOG.md` pluginu — viz [Změna existujícího pluginu](#změna-existujícího-pluginu) |
 | SKILL.md | Musí začínat YAML frontmatterem (`---`) s poli `name` a `description` |
 | `description` skillu | Aktivně, ve 2. osobě („Použij, když…"); účel + trigger, ne implementace; 2–4 věty (cca 25–70 slov) — viz [CONTRIBUTING.md](CONTRIBUTING.md#pravidla-pro-description) |
 | MCP `.mcp.json` | Standardní MCP formát, **nikdy** credentials (použij `env` / správu tajemství) |
@@ -68,6 +69,17 @@ Skripty běží v Bash (Linux/macOS/CI). Na Windows spouštěj přes WSL nebo Gi
 3. Zaregistrovat plugin do `.claude-plugin/marketplace.json`.
 4. Spustit `./scripts/validate-marketplace.sh`.
 5. Otevřít PR — CI automaticky ověří strukturu.
+
+## Změna existujícího pluginu
+
+Po **každé** změně pluginu (skill, manifest, MCP konfigurace, skripty, dokumentace):
+
+1. Povýšit `version` v `plugins/<name>/.claude-plugin/plugin.json` dle semver:
+   - **PATCH** — opravy, úpravy textů/popisů, dokumentace
+   - **MINOR** — nová funkčnost zpětně kompatibilní (nový skill, nová sekce pravidel, nový skript)
+   - **MAJOR** — breaking change (přejmenování skillu, změna chování, odebrání funkčnosti)
+2. Doplnit záznam do `plugins/<name>/CHANGELOG.md` ([Keep a Changelog](https://keepachangelog.com/cs/) — sekce `Added` / `Changed` / `Fixed` / `Removed`, datum ve formátu `YYYY-MM-DD`).
+3. Spustit `./scripts/validate-marketplace.sh`.
 
 ## Odinstalace pluginu
 

@@ -1,7 +1,7 @@
 {
   "name": "repo-architect",
   "description": "GitHub Repository Architect — analyzuje, navrhuje a opravuje strukturu složek a souborů v GitHub repozitáři dle open-source best-practice standardů. Generuje vizuální strom složek, hodnotí existující strukturu a doporučuje přesuny/přejmenování.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Fullsys",
     "email": "ladislav.filip@fullsys.cz"
