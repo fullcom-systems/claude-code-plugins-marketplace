@@ -1,6 +1,12 @@
 ---
 name: ai-agnostic-setup
-description: Správa AI agnostického prostředí pro Claude Code, Cursor a GitHub Copilot – nastavení po klonu, aktualizace sdílených instrukcí/skills/MCP, diagnostika, přidání nového agenta.
+description: >-
+  Použij, když máš nastavit, synchronizovat nebo diagnostikovat AI agnostické
+  prostředí repozitáře sdílené mezi Claude Code, Cursor a GitHub Copilot –
+  třeba u proseb „nastav agenty po klonu", „přidej sdílený MCP server" nebo
+  „proč Cursor nevidí skills". Udržuješ instrukce, skills a MCP konfiguraci
+  z jednoho kanonu a umíš zapojit nového agenta. Nepoužívej pro psaní obsahu
+  samotných skills či instrukcí.
 ---
 
 # AI agnostické prostředí
