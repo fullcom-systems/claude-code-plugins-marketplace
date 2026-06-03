@@ -57,6 +57,22 @@ description: Kdy a k čemu se skill aktivuje.
 Instrukce pro Claude…
 ```
 
+#### Pravidla pro `description`
+
+Pole `description` je jediný signál pro automatickou aktivaci skillu — musí pokrýt **účel** (co skill dělá) i **trigger** (kdy se má použít).
+
+**Tón:**
+
+- Piš aktivně a přímo, ideálně ve druhé osobě: „Použij, když potřebuješ…" nebo „Použij tento skill, když…".
+- Popiš, co skill dělá a kdy se má použít; soustřeď se na uživatelský záměr, ne na vnitřní implementaci.
+
+**Délka:**
+
+- Krátký odstavec: 2–4 věty.
+- Cca 25–70 slov — jasně pokryj účel i trigger, ale zbytečně nenafukuj kontext ani nepřekroč limit 1–1024 znaků pro pole `description`.
+
+Zdroje: [Agent Skills — Optimizing descriptions](https://agentskills.io/skill-creation/optimizing-descriptions), [Agent Skills — Specification](https://agentskills.io/specification), [Claude Docs — Skill best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices).
+
 ### MCP servery
 
 Konfigurace v `.mcp.json` používá standardní formát MCP:
@@ -105,6 +121,7 @@ Konfigurace v `.mcp.json` používá standardní formát MCP:
 - [ ] `plugins/<name>/.claude-plugin/plugin.json` obsahuje pole `name` shodné s názvem adresáře
 - [ ] Plugin je zaregistrován v `.claude-plugin/marketplace.json`
 - [ ] Skills mají frontmatter s `name` a `description`
+- [ ] `description` skillu dodržuje [pravidla pro `description`](#pravidla-pro-description) (2. osoba, účel + trigger, 2–4 věty)
 - [ ] `.mcp.json` je validní JSON a neobsahuje credentials
 - [ ] `./scripts/validate-marketplace.sh` prochází
 - [ ] README.md a CHANGELOG.md jsou aktuální

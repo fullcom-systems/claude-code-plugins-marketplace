@@ -56,6 +56,7 @@ Skripty běží v Bash (Linux/macOS/CI). Na Windows spouštěj přes WSL nebo Gi
 | `name` v plugin.json | Musí odpovídat názvu adresáře pluginu |
 | Verze | Striktní semver (`MAJOR.MINOR.PATCH`) |
 | SKILL.md | Musí začínat YAML frontmatterem (`---`) s poli `name` a `description` |
+| `description` skillu | Aktivně, ve 2. osobě („Použij, když…"); účel + trigger, ne implementace; 2–4 věty (cca 25–70 slov) — viz [CONTRIBUTING.md](CONTRIBUTING.md#pravidla-pro-description) |
 | MCP `.mcp.json` | Standardní MCP formát, **nikdy** credentials (použij `env` / správu tajemství) |
 | JSON soubory | Odsazení 2 mezerami, bez trailing comma |
 | Kódování | UTF-8, LF konce řádků (`.gitattributes` to vynucuje) |
