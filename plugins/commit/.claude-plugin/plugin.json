@@ -1,0 +1,11 @@
+{
+  "name": "commit",
+  "description": "Commit Message Generator — vytváří commit zprávy podle Conventional Commits a interních konvencí NextFIS (český subject, ticket z větve, typy feat/fix/…). Skill pro generování zprávy i provedení commitu.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Fullsys",
+    "email": "ladislav.filip@fullsys.cz"
+  },
+  "license": "MIT",
+  "keywords": ["commit", "conventional-commits", "git", "nextfis"]
+}

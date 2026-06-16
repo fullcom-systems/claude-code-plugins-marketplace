@@ -26,6 +26,11 @@
       "name": "ai-agnostic-setup",
       "source": "./plugins/ai-agnostic-setup",
       "description": "Správa AI agnostického prostředí – synchronizace instrukcí, skills a MCP serverů mezi Claude Code, Cursor a GitHub Copilot bez ručního kopírování. Nastavení po klonu, diagnostika, přidání nového agenta."
+    },
+    {
+      "name": "commit",
+      "source": "./plugins/commit",
+      "description": "Commit Message Generator — vytváří commit zprávy podle Conventional Commits a interních konvencí NextFIS (český subject, ticket z větve, typy feat/fix/…)."
     }
   ]
 }
