@@ -15,7 +15,11 @@ Globální skill pro vytvoření PR v projektu PPS Planning (Azure DevOps on-pre
 Skill používá Azure CLI s rozšířením `azure-devops`:
 
 ```bash
+# macOS
 brew install azure-cli
+# Windows (jedna z možností)
+winget install --id Microsoft.AzureCLI
+
 az extension add --name azure-devops
 ```
 
@@ -63,7 +67,7 @@ Detekuj typ projektu podle obsahu repozitáře a podle toho zvol ověření:
 
 ### 2a. Backend (.NET) — repozitář obsahuje `*.sln` v rootu
 
-Příklady: `Planning` (Planning.sln), další .NET microservices PPS.
+Příklady: `Planning` (Planning.sln), `Economics` (Economics.sln), další .NET microservices PPS.
 
 Spusť build:
 ```bash
@@ -225,35 +229,28 @@ PR title je popisný název větve (bez čísla JIRA úkolu a bez prefixu `featu
 
 Příklad: větev `FIE1933-18974-order-list-projects-filter` → title: `Order list projects filter`.
 
-`az repos pr create` má parametr `--description`, který každou předanou hodnotu interpretuje jako nový řádek. Multi-line PR zprávu proto **nepředávej jako jeden string**, ale sestav **bash pole `description_args` řádek po řádku** přímo z PR zprávy z kroku 4 (žádný zápis do souboru v repu):
+Popis PR **předávej přes soubor (`@file`), ne přes argumenty.** Na **Windows + Git Bash (MSYS2)** se diakritika předaná v argv komolí na `�` (konverze argv mezi MSYS2 a nativním Windows `az`/Python). Spolehlivé napříč OS je zapsat PR zprávu do dočasného UTF-8 souboru **mimo repozitář** a předat ji přes `@<cesta>` — `az` ho přečte jako UTF-8.
+
+1. Zapiš celou PR zprávu z kroku 4 do dočasného UTF-8 souboru **mimo repo** (UTF-8 **bez BOM**), např. `"${TMPDIR:-/tmp}/pps_pr_desc.txt"` (macOS/Linux) nebo `"$TEMP/pps_pr_desc.txt"` (Windows). Obsah = JIRA odkaz + odrážky + ověřovací řádky. **Žádný zápis do repa.**
+
+2. **Title drž v ASCII** (bez diakritiky) — title se předává v argv, kde by se na Windows rozsypal. Názvy větví jsou stejně ASCII, takže to vychází přirozeně.
+
+3. Vytvoř PR a popis předej přes `@<cesta>`:
 
 ```bash
-description_args=(
-  "**[FIE1933-18974](https://jira.skoda.vwgroup.com/browse/FIE1933-18974)**"
-  ""
-  "- Změna 1"
-  "- Změna 2"
-  ""
-  "- [x] Build ověření (0 errors)"
-  "- [x] Testy (527 passed, 0 failed)"
-  "- [x] Přidány testy pro otestování nové funkcionality"
-)
-
-az repos pr create \
+PYTHONUTF8=1 PYTHONIOENCODING=utf-8 az repos pr create \
   --organization "<org-url>" \
   --project "<project>" \
   --repository "<repo>" \
   --source-branch "$(git branch --show-current)" \
   --target-branch "dev-sprint" \
-  --title "<PR title>" \
-  --description "${description_args[@]}" \
+  --title "<PR title v ASCII>" \
+  --description @"<cesta-k-souboru>" \
   --detect false \
   --output json
 ```
 
-Vše spusť **v jednom bash volání** (heredoc / `bash -lc`), aby pole `description_args` přežilo do volání `az`.
-
-Pokud některý řádek obsahuje dvojité uvozovky, escapuj je (`\"`).
+`--description @soubor` načte celý obsah souboru jako jeden multi-line popis (zalomení řádků zůstanou zachována) — tím se úplně obejde předávání textu v argumentech a diakritika zůstane v pořádku. (`@file` je standardní konvence Azure CLI pro načtení hodnoty parametru ze souboru.)
 
 Z výstupu (JSON) vyber:
 - `pullRequestId` → `PR_ID`
@@ -261,11 +258,19 @@ Z výstupu (JSON) vyber:
 
 Pokud `_links.web.href` chybí, fallback URL sestav jako `<web-base>/pullrequest/<PR_ID>`.
 
-Příklad extrakce přes `jq` (nebo `python3 -c`):
 ```bash
 PR_ID=$(echo "$RESPONSE" | jq -r '.pullRequestId')
 PR_URL=$(echo "$RESPONSE" | jq -r '._links.web.href // empty')
+[ -z "$PR_URL" ] && PR_URL="<web-base>/pullrequest/$PR_ID"
 ```
+
+(Volitelně po dokončení dočasný soubor smaž.)
+
+### Kódování / Windows (proč `@file` a ASCII title)
+
+- `az` je Python CLI. Na **Windows + Git Bash (MSYS2)** se **non-ASCII znaky předané jako argumenty rozsypou** (`�`) — týká se `--title` i `--description`, pokud text jde přímo v argv. Korupce nastává **před** Pythonem (konverze argv při `CreateProcess`), takže ji `PYTHONUTF8` sám neopraví — proto popis přes `@file` a title v ASCII. `PYTHONUTF8`/`PYTHONIOENCODING` jen zajistí, že `az` přečte soubor a vytiskne výstup jako UTF-8.
+- **ASCII text projde všude** — na macOS/Linuxu (celá cesta UTF-8) ani u popisů bez diakritiky problém nevzniká.
+- **Pozor na ověřování:** `az` na Windows komolí i vlastní **výstup**, takže `az repos pr show ...` může diakritiku zobrazit jako `�`, i když je na serveru uložená správně. Pro jistotu, jak popis vypadá, **otevři PR v prohlížeči** — konzolový výstup `az` v tomhle není spolehlivý.
 
 ### Chybová obsluha
 

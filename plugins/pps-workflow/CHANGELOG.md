@@ -11,7 +11,7 @@ a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
 - Počáteční verze pluginu `pps-workflow`
 - Skill `commit-pps` — Conventional Commits pro PPS, větvení z `dev-sprint`, volitelný `push` argument
-- Skill `pr-pps` — tvorba pull requestu do `dev-sprint` přes Azure CLI (on-premise Azure DevOps), verifikace build/test/lint, JIRA odkaz
+- Skill `pr-pps` — tvorba pull requestu do `dev-sprint` přes Azure CLI (on-premise Azure DevOps), verifikace build/test/lint, JIRA odkaz; popis PR se předává přes `@file` (UTF-8) a title v ASCII kvůli korektní diakritice na Windows/Git Bash
 - Skill `pr-fix-pps` — zapracování review komentářů z PR, auto-fix SonarQube findings, commit + push
 - Manifest `.claude-plugin/plugin.json`, `README.md`
 
