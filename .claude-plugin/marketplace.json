@@ -36,6 +36,11 @@
       "name": "pr",
       "source": "./plugins/pr",
       "description": "Pull Request Generator — vytváří pull requesty podle šablony NextFIS (ticket z větve, popis změn, dopady, testování)."
+    },
+    {
+      "name": "pps-workflow",
+      "source": "./plugins/pps-workflow",
+      "description": "PPS Workflow — git/PR skilly pro projekty PPS (Planning a další .NET/Angular microservices) v Azure DevOps on-premise: commit-pps (Conventional Commits + push), pr-pps (tvorba PR) a pr-fix-pps (zapracování review komentářů + auto-fix SonarQube)."
     }
   ]
 }
