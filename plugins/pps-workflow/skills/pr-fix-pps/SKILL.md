@@ -1,22 +1,14 @@
 ---
 name: pr-fix-pps
-description: Načte komentáře z existujícího pull requestu v Azure DevOps (PPS), automaticky opraví SonarQube findings, vypíše reviewer komentáře k potvrzení, vytvoří commit a pushne. Spouštěj vždy, když uživatel chce zapracovat připomínky z PR, opravit Sonar findings nebo "zareagovat na komentáře v PR".
+description: Načte komentáře z existujícího pull requestu v Azure DevOps (PPS), automaticky opraví SonarQube findings, vypíše reviewer komentáře k potvrzení, vytvoří commit a pushne. Použij vždy, když uživatel chce zapracovat připomínky z PR, opravit Sonar findings nebo "zareagovat na komentáře v PR".
 disable-model-invocation: true
 ---
 
 # Skill: /pr-fix-pps
 
-Globální skill pro zapracování review komentářů z existujícího PR v projektu PPS (Azure DevOps on-premise).
+Globální skill pro zapracování review komentářů z existujícího PR v projektu PPS (Azure DevOps on-premise). Vyžaduje stejné prostředí jako [`pr-pps`](../pr-pps/SKILL.md): **Azure CLI** + rozšíření `azure-devops` a env proměnnou `AZURE_DEVOPS_EXT_PAT` se scope **Code (Read & Write)** — jednorázové nastavení viz [README pluginu](../../README.md#prerekvizity). Pokud `AZURE_DEVOPS_EXT_PAT` chybí nebo PAT nemá scope, `az devops invoke` selže s `TF401019` / `401`.
 
 Cíl: stáhnout aktivní review threads z PR, vyfiltrovat **SonarQube findings** (auto-fix) a **reviewer komentáře** (jen shrnutí k potvrzení), opravit kód, commitnout a pushnout. Označení threads jako resolved skill **neprovádí** — to si dělá uživatel ručně v Azure DevOps UI po review opravy.
-
-## Prerekvizity
-
-Stejné jako u [`pr-pps`](../pr-pps/SKILL.md):
-- Azure CLI s rozšířením `azure-devops` (`brew install azure-cli && az extension add --name azure-devops`)
-- Env proměnná `AZURE_DEVOPS_EXT_PAT` v `~/.claude/settings.json` se scope **Code (Read & Write)**
-
-Pokud `AZURE_DEVOPS_EXT_PAT` chybí nebo PAT nemá scope, `az devops invoke` selže s `TF401019` / `401`.
 
 ## 1. Detekce organization / project / repository
 

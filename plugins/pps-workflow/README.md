@@ -25,12 +25,32 @@ Push je centralizovaný v `commit-pps`: `pr-pps` i `pr-fix-pps` volají `/commit
 
 ## Prerekvizity
 
-- **Azure CLI** s rozšířením `azure-devops`:
-  ```bash
-  brew install azure-cli
-  az extension add --name azure-devops
-  ```
-- **PAT** v env proměnné `AZURE_DEVOPS_EXT_PAT` (scope **Code (Read & Write)**, pro `pr-fix-pps` navíc **Pull Request Threads (Read & Write)**). Nastav v `~/.claude/settings.json` → `env`. **Nikdy** token nedávej do souboru v repu.
+Jednorázové nastavení pro `pr-pps` a `pr-fix-pps` (samotné skilly už ho do kontextu neopakují — drží jen odkaz sem).
+
+**1. Azure CLI + rozšíření `azure-devops`**
+
+```bash
+# macOS
+brew install azure-cli
+# Windows (jedna z možností)
+winget install --id Microsoft.AzureCLI
+
+az extension add --name azure-devops
+```
+
+**2. Personal Access Token**
+
+PAT v env proměnné `AZURE_DEVOPS_EXT_PAT` se scope **Code (Read & Write)** (pro `pr-fix-pps` navíc **Pull Request Threads (Read & Write)**). Vytvoříš v Azure DevOps → User Settings → Personal Access Tokens. Nastav v `~/.claude/settings.json` (CC ho načte v každé session):
+
+```json
+{
+  "env": {
+    "AZURE_DEVOPS_EXT_PAT": "<tvůj-token>"
+  }
+}
+```
+
+**Nikdy** token nedávej do souboru v repu.
 
 ## Instalace
 

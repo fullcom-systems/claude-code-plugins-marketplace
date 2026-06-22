@@ -1,44 +1,12 @@
 ---
 name: pr-pps
-description: Vytvoří pull request v Azure DevOps pro projekt Planning/PPS — zkontroluje stav větve, sestaví PR zprávu ze všech commitů oproti dev-sprint, vytvoří PR přes Azure CLI a vrátí odkaz. Spouštěj tento skill pokaždé, když uživatel chce vytvořit pull request, PR, nebo mergovat větev do dev-sprint.
+description: Vytvoří pull request v Azure DevOps pro projekt Planning/PPS — zkontroluje stav větve, sestaví PR zprávu ze všech commitů oproti dev-sprint, vytvoří PR přes Azure CLI a vrátí odkaz. Použij vždy, když uživatel chce vytvořit pull request, PR, nebo mergovat větev do dev-sprint.
 disable-model-invocation: true
 ---
 
 # Skill: /pr-pps
 
-Globální skill pro vytvoření PR v projektu PPS Planning (Azure DevOps on-premise).
-
-## Prerekvizity
-
-### Azure CLI
-
-Skill používá Azure CLI s rozšířením `azure-devops`:
-
-```bash
-# macOS
-brew install azure-cli
-# Windows (jedna z možností)
-winget install --id Microsoft.AzureCLI
-
-az extension add --name azure-devops
-```
-
-### Personal Access Token
-
-PAT musí být dostupný jako env proměnná `AZURE_DEVOPS_EXT_PAT` s oprávněním **Code (Read & Write)**.
-
-**V `~/.claude/settings.json`** (doporučeno — CC ho načte automaticky v každé session):
-```json
-{
-  "env": {
-    "AZURE_DEVOPS_EXT_PAT": "tvůj-token"
-  }
-}
-```
-
-Token vytvoříš v Azure DevOps → User Settings → Personal Access Tokens → scope **Code (Read & Write)**.
-
-Pokud máš v `settings.json` ještě staré `AZDO_PAT` ze skillu `/pr`, můžeš ho ponechat — `pr-pps` používá výhradně `AZURE_DEVOPS_EXT_PAT` (proměnnou, kterou čte přímo `az`).
+Globální skill pro vytvoření PR v projektu PPS Planning (Azure DevOps on-premise). Vyžaduje **Azure CLI** + rozšíření `azure-devops` a **PAT** v env proměnné `AZURE_DEVOPS_EXT_PAT` (scope **Code (Read & Write)**) — jednorázové nastavení viz [README pluginu](../../README.md#prerekvizity). Chybějící `az` nebo rozšíření za běhu řeší sekce Chybová obsluha níže.
 
 ## 1. Kontrola stavu větve
 
