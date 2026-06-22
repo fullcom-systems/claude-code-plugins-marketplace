@@ -40,7 +40,7 @@ az extension add --name azure-devops
 
 **2. Personal Access Token**
 
-PAT v env proměnné `AZURE_DEVOPS_EXT_PAT` se scope **Code (Read & Write)** (pro `pr-fix-pps` navíc **Pull Request Threads (Read & Write)**). Vytvoříš v Azure DevOps → User Settings → Personal Access Tokens. Nastav v `~/.claude/settings.json` (CC ho načte v každé session):
+PAT v env proměnné `AZURE_DEVOPS_EXT_PAT` se scope **Code (Read & Write)** (ten pokrývá i PR a PR thread operace, které volá `pr-fix-pps`). Vytvoříš v Azure DevOps → User Settings → Personal Access Tokens. Nastav v `~/.claude/settings.json` (CC ho načte v každé session):
 
 ```json
 {

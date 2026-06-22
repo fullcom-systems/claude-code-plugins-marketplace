@@ -217,7 +217,7 @@ Připomeň uživateli, ať si v Azure DevOps UI označí vyřešené thready jak
 ## Chybové stavy (souhrn)
 
 - **`az` chybí / `azure-devops` extension chybí** → instalace stejně jako v [`pr-pps`](../pr-pps/SKILL.md).
-- **401 / TF401019** → PAT expiroval nebo nemá scope. PAT potřebuje **Code (Read & Write)** + **Pull Request Threads (Read & Write)**.
+- **401 / TF401019** → PAT expiroval nebo nemá scope. PAT potřebuje **Code (Read & Write)** (ten pokrývá i PR thready).
 - **404 na threadech** → pravděpodobně PR ID neexistuje nebo PAT nevidí repository. Ověř `az repos pr show --id $PR_ID`.
 - **Build/test selhal po fixu** → zastav, vrať řízení uživateli, žádné commity ani thread updates.
 

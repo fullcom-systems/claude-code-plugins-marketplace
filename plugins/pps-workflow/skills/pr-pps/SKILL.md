@@ -206,7 +206,7 @@ Popis PR **předávej přes soubor (`@file`), ne přes argumenty.** Na **Windows
 3. Vytvoř PR a popis předej přes `@<cesta>`:
 
 ```bash
-PYTHONUTF8=1 PYTHONIOENCODING=utf-8 az repos pr create \
+RESPONSE=$(PYTHONUTF8=1 PYTHONIOENCODING=utf-8 az repos pr create \
   --organization "<org-url>" \
   --project "<project>" \
   --repository "<repo>" \
@@ -215,7 +215,7 @@ PYTHONUTF8=1 PYTHONIOENCODING=utf-8 az repos pr create \
   --title "<PR title v ASCII>" \
   --description @"<cesta-k-souboru>" \
   --detect false \
-  --output json
+  --output json)
 ```
 
 `--description @soubor` načte celý obsah souboru jako jeden multi-line popis (zalomení řádků zůstanou zachována) — tím se úplně obejde předávání textu v argumentech a diakritika zůstane v pořádku. (`@file` je standardní konvence Azure CLI pro načtení hodnoty parametru ze souboru.)
