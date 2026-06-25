@@ -1,0 +1,74 @@
+# pps-workflow
+
+Sada git/PR skillů pro projekty **PPS** (Planning a další .NET/Angular microservices) v **Azure DevOps on-premise** (Škoda). Pokrývá celý workflow od commitu přes založení pull requestu až po zapracování review komentářů.
+
+> Určeno pro PPS, **nezávisí** na YouTrack ani na konvencích NextFIS. Pro NextFIS použij pluginy `commit` a `pr`.
+
+## Skilly
+
+| Skill | Invokace | Účel |
+|-------|----------|------|
+| `commit-pps` | automaticky i `/commit-pps` | Conventional Commits — analyzuje diff, určí type/scope/popis, commitne; s argumentem `push` provede i `git push`. |
+| `pr-pps` | jen `/pr-pps` | Vytvoří PR do `dev-sprint` přes Azure CLI — verifikace build/test/lint, JIRA odkaz, ověřovací checklist. |
+| `pr-fix-pps` | jen `/pr-fix-pps` | Zapracuje review komentáře z PR — auto-fix SonarQube findings, reviewer komentáře k potvrzení, commit + push. |
+
+`pr-pps` a `pr-fix-pps` mají `disable-model-invocation: true` — spustí se **pouze** explicitním zavoláním, ne automaticky.
+
+## Workflow
+
+```
+commit-pps  →  pr-pps  →  (review)  →  pr-fix-pps
+   commit       PR                       zapracování připomínek
+```
+
+Push je centralizovaný v `commit-pps`: `pr-pps` i `pr-fix-pps` volají `/commit-pps push`, takže logika pushe žije na jednom místě.
+
+## Prerekvizity
+
+Jednorázové nastavení pro `pr-pps` a `pr-fix-pps` (samotné skilly už ho do kontextu neopakují — drží jen odkaz sem).
+
+**1. Azure CLI + rozšíření `azure-devops`**
+
+```bash
+# macOS
+brew install azure-cli
+# Windows (jedna z možností)
+winget install --id Microsoft.AzureCLI
+
+az extension add --name azure-devops
+```
+
+**2. Personal Access Token**
+
+PAT v env proměnné `AZURE_DEVOPS_EXT_PAT` se scope **Code (Read & Write)** (ten pokrývá i PR a PR thread operace, které volá `pr-fix-pps`). Vytvoříš v Azure DevOps → User Settings → Personal Access Tokens. Nastav v `~/.claude/settings.json` (CC ho načte v každé session):
+
+```json
+{
+  "env": {
+    "AZURE_DEVOPS_EXT_PAT": "<tvůj-token>"
+  }
+}
+```
+
+**Nikdy** token nedávej do souboru v repu.
+
+## Instalace
+
+```
+/plugin install pps-workflow@fullsys-plugins
+```
+
+## Příklady použití
+
+```
+/commit-pps
+/commit-pps push
+/pr-pps
+/pr-fix-pps
+/pr-fix-pps 12345
+```
+
+## Bezpečnost
+
+- **No direct outbound calls** — veškerá komunikace s Azure DevOps jde přes `az` / `az devops invoke`, nikdy přes `curl`/`wget`.
+- Skilly nikdy necommitují secrets a nepoužívají `--force` / `--no-verify` bez explicitního pokynu.
