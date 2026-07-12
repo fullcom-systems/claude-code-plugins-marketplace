@@ -14,8 +14,10 @@ const BUILD_TARGET = "{{BUILD_TARGET}}"; // <- doplněno při /setup-agentic-loo
 // by mohlo běžet víc `dotnet build` nad stejným řešením zároveň → zámky na obj/bin →
 // falešné chyby. mkdir je atomické (test-and-set). Zámek po spadlém procesu (starší než
 // LOCK_STALE_MS) ukradneme, ať se smyčka nezasekne.
+// LOCK_STALE_MS musí být delší než nejhorší legitimní držení zámku kterýmkoli hookem —
+// to je verify-tests.js: až 2 běhy `dotnet test` po 300 s (no-build + fallback) = 600 s.
 const LOCK_DIR = path.join(__dirname, ".dotnet-lock");
-const LOCK_STALE_MS = 180_000;
+const LOCK_STALE_MS = 660_000;
 
 function acquireLock() {
   try {
@@ -23,6 +25,10 @@ function acquireLock() {
     return true;
   } catch {
     try {
+      // Vědomý kompromis: mezi statSync a rmSync je okno, kdy si dva procesy mohou stale
+      // zámek "ukrást" navzájem (a smazat ten čerstvý). Pravděpodobnost je mizivá (musely
+      // by se trefit do milisekund PO 11minutovém stale timeoutu) a dopad zachytí retry
+      // counter — plný fs-based mutex by tu nebyl úměrný složitostí.
       if (Date.now() - fs.statSync(LOCK_DIR).mtimeMs > LOCK_STALE_MS) {
         fs.rmSync(LOCK_DIR, { recursive: true, force: true });
         fs.mkdirSync(LOCK_DIR);
@@ -74,7 +80,7 @@ try {
   const base = path.basename(filePath);
   const warnings = stdout
     .split("\n")
-    .filter((l) => /:\s*warning\s+[A-Z]{1,4}\d+/i.test(l) && (base ? l.includes(base) : true))
+    .filter((l) => /:\s*warning\s+[A-Z]{1,4}\d+/i.test(l) && l.includes(base))
     .slice(0, 20);
   if (warnings.length) {
     exitCode = 2;

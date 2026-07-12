@@ -42,7 +42,11 @@ Zjisti:
 Z toho odvoď:
 
 - `BUILD_TARGET` — cesta k `.sln` nebo hlavnímu `.csproj`
-- `TEST_TARGET` — stejně, ale pro testy (může být stejný sln, pokud test projekty jsou v něm zahrnuté)
+- `TEST_TARGET` — stejně, ale pro testy (může být stejný sln, pokud test projekty jsou v něm zahrnuté).
+  **Pokud žádný testovací projekt nenajdeš, Stop hook (`verify-tests.js`) neinstaluj** — `dotnet test`
+  bez objevitelných testů selhává a gate by blokoval každý tah až do stropu retry counteru. Nainstaluj
+  jen build gate (`verify-build.js`) a v závěrečném shrnutí (Krok 7) doporuč doplnit testy a skill
+  spustit znovu.
 - `IS_MONOREPO` — true, pokud je v repu víc nezávislých modulů/test projektů (jako BILLING 2.0 / NEXT WMS
   ve stejném repu) — v tom případě zvaž volitelné vylepšení v Kroku 6.
 
@@ -108,8 +112,9 @@ Jak hooky fungují (kontext pro případné úpravy, samotné soubory neměň na
   když `--no-build` nemá co spustit (neaktuální build nebo `TEST_TARGET` přesahuje `BUILD_TARGET`), hook
   jednorázově spadne zpět na plný `dotnet test`, aby výsledek zůstal autoritativní. Pojistka proti nekonečné
   smyčce je **primárně retry counter** (`.test-retry-count`, strop `MAX_RETRIES = 5`, reset na 0 po úspěchu
-  i po dosažení stropu); `stop_hook_active` je jen **sekundární** pojistka — nikdy se na něj bezpodmínečně
-  neexituje 0 (jinak by counter i MAX_RETRIES byly mrtvý kód).
+  i po dosažení stropu); `stop_hook_active` je jen **sekundární** pojistka pro případ rozbitého counteru —
+  pole už není v aktuálně dokumentovaném schématu Stop payloadu, takže když ho CLI neposílá, větev se
+  neaktivuje a nic se nerozbije.
 - **Sdílený zámek `.dotnet-lock/`** — atomický `mkdir` (test-and-set) brání souběhu více `dotnet` procesů
   nad stejným řešením (zámky na `obj`/`bin` → falešné chyby). „Stale" zámek starší než 180 s se ukradne;
   Stop hook na zámek chvíli blokujícím způsobem čeká (`Atomics.wait`, max 60 s), protože test gate musí proběhnout.
@@ -126,7 +131,8 @@ tam řádky ještě nejsou):
 .claude/hooks/.changed-files
 ```
 
-(`.changed-files` vzniká jen při monorepo optimalizaci z Kroku 6.)
+(`.changed-files` vzniká jen při monorepo optimalizaci z Kroku 6, a to jen ve fallback variantě
+pro starší verze CLI.)
 
 ---
 
@@ -138,7 +144,9 @@ tam řádky ještě nejsou):
 > Fullsys bývá context7 v globálním user MCP — ověř aktuální schéma dřív, než níže uvedený JSON zapíšeš:
 > 1. `resolve-library-id` pro „Claude Code" → vyber zdroj s vysokou reputací (např. `/websites/code_claude`).
 > 2. `query-docs` na dotaz „hooks settings.json — PostToolUse matcher a Stop hook struktura, exit code 2".
-> 3. Zapisovaný JSON přizpůsob tomu, co context7 vrátí; formát níže ber jako výchozí.
+> 3. Ověř i **schéma stdin payloadu Stop hooku** (jaká pole CLI posílá — např. `tool_calls_in_turn`,
+>    `last_assistant_message`), ne jen formát registrace — na payloadu závisí Krok 6.
+> 4. Zapisovaný JSON přizpůsob tomu, co context7 vrátí; formát níže ber jako výchozí.
 >
 > Když context7 dostupný není, použij formát níže beze změny a upozorni na to v Kroku 7. Dokumentaci ber
 > přes context7 (MCP), ne přímým voláním webu — princip „no direct outbound calls from skills".
@@ -170,6 +178,11 @@ stávajícího `hooks` objektu, neztrácej cizí konfiguraci):
 
 Ověř, že `node` je dostupný (`node --version`). Pokud ne, uprav shebang/spouštění na to, co je v prostředí
 k dispozici, ale preferuj Node.js kvůli přenositelnosti mezi Windows/Linux.
+
+> Přenositelnost: aktuální dokumentace doporučuje jako robustnější **exec form** — místo shell příkazu
+> `"command": "node", "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/verify-build.js"]` (obchází tokenizaci
+> shellu, `${CLAUDE_PROJECT_DIR}` se předá jako jeden argument). Pokud ji context7 potvrdí pro verzi CLI
+> v cílovém prostředí, použij ji; shell form výše funguje na Windows (Git Bash / PowerShell) i Linuxu.
 
 > Idempotence: pokud `.claude/settings.json` už tyhle hooky z dřívějšího spuštění obsahuje, nepřidávej
 > je znovu — před zápisem zkontroluj, jestli stejný `command` v daném eventu (`PostToolUse`/`Stop`) už
@@ -218,13 +231,16 @@ Postup (idempotentně, respektuj existující konfiguraci — nikdy nepřepisuj 
 Pokud `IS_MONOREPO = true`, zvaž rozšíření `verify-tests.js` tak, aby netestoval celé řešení, ale jen
 testovací projekt relevantní k editovanému souboru:
 
-Stop hook v payloadu **nemá** `tool_input` ani `file_path` (ty jsou dostupné jen u
-`PreToolUse`/`PostToolUse`). Seznam změněných souborů si proto musíš předat sám jednou z těchto cest:
+Seznam změněných souborů získáš ve Stop hooku jednou z těchto cest (ověř přes context7, co payload
+ve verzi CLI cílového prostředí skutečně obsahuje — viz Krok 4):
 
-1. **Doporučeno:** `verify-build.js` (PostToolUse) při každé editaci připíše `input.tool_input.file_path`
-   do dočasného souboru (např. `.claude/hooks/.changed-files`). `verify-tests.js` (Stop) ho na začátku
-   přečte, odvodí z něj změněné moduly a soubor vyprázdní.
-2. **Alternativa:** ve Stop hooku naparsuj transcript z `input.transcript_path` a vytáhni z něj poslední
+1. **Doporučeno (aktuální schéma):** Stop payload obsahuje pole `tool_calls_in_turn` — pole objektů
+   s `tool_name` a `tool_input`. Z položek s `tool_name` `Edit`/`Write` vytáhni `tool_input.file_path`
+   přímo, bez pomocných souborů.
+2. **Fallback (starší verze CLI bez `tool_calls_in_turn`):** `verify-build.js` (PostToolUse) při každé
+   editaci připíše `input.tool_input.file_path` do dočasného souboru (např. `.claude/hooks/.changed-files`).
+   `verify-tests.js` (Stop) ho na začátku přečte, odvodí z něj změněné moduly a soubor vyprázdní.
+3. **Alternativa:** ve Stop hooku naparsuj transcript z `input.transcript_path` a vytáhni z něj poslední
    editace.
 
 Z takto získané cesty pak projdi adresářový strom směrem nahoru, dokud nenajdeš sourozenecký

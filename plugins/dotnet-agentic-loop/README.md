@@ -21,9 +21,10 @@ agent sám uzavíral cyklus **gather context → take action → verify work →
 Agentické „loop" programování stojí a padá na tom, že má agent **deterministický signál pravdy** — něco,
 co bez zapojení člověka řekne „hotovo / nehotovo". U .NET projektů jsou tím signálem **build** a **testy**.
 
-Skill se spustí **v cílovém .NET repozitáři** jako `/setup-agentic-loop` a projde šest kroků: analýza
+Skill se spustí **v cílovém .NET repozitáři** jako `/setup-agentic-loop` a projde sedm kroků: analýza
 projektu → zápis pravidel do `CLAUDE.md` → vygenerování hook skriptů z přiložených šablon → registrace
-hooků v `settings.json` → volitelná monorepo optimalizace → ověření a shrnutí.
+hooků v `settings.json` → volitelná statická analýza (SonarAnalyzer.CSharp) → volitelná monorepo
+optimalizace → ověření a shrnutí.
 
 ## Skilly
 

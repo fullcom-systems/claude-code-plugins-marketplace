@@ -18,3 +18,9 @@ a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 - Volitelný Krok 5 skillu — přidání Roslyn analyzátoru `SonarAnalyzer.CSharp` (v10.29.0, `PrivateAssets=all`, respektuje Central Package Management) pro shift-left statickou analýzu ve smyčce; bez `-warnaserror`, warnings zůstávají neblokující
 - Pravidlo v `CLAUDE.md` cílového repa: analyzátorové warnings z hooku má agent řešit, ne mlčky ignorovat
 - Manifest `.claude-plugin/plugin.json`, `README.md`
+- Zapracované nálezy z code review (před prvním vydáním): `LOCK_STALE_MS` zvýšen na 660 s (nad nejhorší
+  legitimní držení zámku, dřív šlo zámek „ukrást" běžícím testům); Krok 1 — bez nalezených test projektů
+  se Stop hook neinstaluje (jinak by gate blokoval každý tah); Krok 6 — změněné soubory se primárně čtou
+  z pole `tool_calls_in_turn` Stop payloadu (`.changed-files` jen jako fallback pro starší CLI); Krok 4 —
+  ověření přes context7 rozšířeno i na schéma Stop payloadu + zmínka exec form registrace hooků;
+  `stop_hook_active` popsán jako pole mimo aktuálně dokumentované schéma (jen defenzivní větev)

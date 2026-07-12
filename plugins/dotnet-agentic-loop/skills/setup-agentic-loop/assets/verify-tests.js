@@ -32,8 +32,10 @@ function setRetryCount(n) {
 
 // Sdílený zámek se `verify-build.js` — ať `dotnet test` (který taky buildí) neběží souběžně
 // s doběhávajícím buildem nad stejným řešením a nevzniknou falešné chyby ze zámků na obj/bin.
+// LOCK_STALE_MS musí být delší než nejhorší legitimní držení zámku — tady až 2 běhy
+// `dotnet test` po 300 s (no-build + fallback) = 600 s; hodnota MUSÍ být stejná v obou hoocích.
 const LOCK_DIR = path.join(__dirname, ".dotnet-lock");
-const LOCK_STALE_MS = 180_000;
+const LOCK_STALE_MS = 660_000;
 
 function acquireLock() {
   try {
@@ -41,6 +43,8 @@ function acquireLock() {
     return true;
   } catch {
     try {
+      // Vědomý kompromis: mezi statSync a rmSync je okno, kdy si dva procesy mohou stale
+      // zámek "ukrást" navzájem — viz komentář ve verify-build.js.
       if (Date.now() - fs.statSync(LOCK_DIR).mtimeMs > LOCK_STALE_MS) {
         fs.rmSync(LOCK_DIR, { recursive: true, force: true });
         fs.mkdirSync(LOCK_DIR);
@@ -100,10 +104,11 @@ const input = readStdin();
 const retries = getRetryCount();
 
 // Pojistka proti nekonečné smyčce = tenhle retry counter. Stop hook s exit 2 vynutí
-// pokračování, takže `stop_hook_active` je true při KAŽDÉM dalším pokusu, ne jen jednou.
-// Proto se na něj NESMÍ bezpodmínečně exitovat 0 — jinak by se testy ověřily jen jednou
-// a counter i MAX_RETRIES by byly mrtvý kód. Loop tady stropuje counter, který se resetuje
-// na úspěch a po dosažení MAX_RETRIES.
+// pokračování, takže při dalších pokusech hook běží znovu — nesmí se tedy bezpodmínečně
+// exitovat 0, jinak by se testy ověřily jen jednou a counter i MAX_RETRIES byly mrtvý kód.
+// Counter se resetuje na úspěch a po dosažení MAX_RETRIES. Pozn.: soubor counteru přežívá
+// mezi sessions — přerušený úkol s counterem > 0 sníží rozpočet pokusů dalšímu úkolu;
+// vědomě jednoduché (counter se srovná při prvním úspěchu/stropu).
 if (retries >= MAX_RETRIES) {
   setRetryCount(0);
   process.stderr.write(
@@ -113,9 +118,11 @@ if (retries >= MAX_RETRIES) {
   process.exit(0); // necháme Claude zastavit, dál by to bylo kontraproduktivní
 }
 
-// Sekundární pojistka: jsme ve vynuceném pokračování (stop_hook_active), ale counter je
-// na nule — to znamená, že se stav nepodařilo uložit (rozbitý counter). Bez funkčního
-// counteru hrozí zacyklení, proto radši necháme Claude zastavit.
+// Sekundární pojistka: jsme ve vynuceném pokračování, ale counter je na nule — stav se
+// nepodařilo uložit (rozbitý counter, např. read-only fs). Bez funkčního counteru hrozí
+// zacyklení, proto radši necháme Claude zastavit. Pole `stop_hook_active` už není
+// v aktuálně dokumentovaném schématu Stop payloadu — pokud ho CLI neposílá, větev se
+// nikdy neaktivuje a chová se to bezpečně (primární pojistkou zůstává counter).
 if (input.stop_hook_active && retries === 0) {
   process.exit(0);
 }
