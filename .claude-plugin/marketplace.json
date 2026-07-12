@@ -41,6 +41,11 @@
       "name": "pps-workflow",
       "source": "./plugins/pps-workflow",
       "description": "PPS Workflow — git/PR skilly pro projekty PPS (Planning a další .NET/Angular microservices) v Azure DevOps on-premise: commit-pps (Conventional Commits + push), pr-pps (tvorba PR) a pr-fix-pps (zapracování review komentářů + auto-fix SonarQube)."
+    },
+    {
+      "name": "dotnet-agentic-loop",
+      "source": "./plugins/dotnet-agentic-loop",
+      "description": "Zavede v cílovém .NET repu deterministickou agentickou verifikační smyčku (build + testy jako automatický pass/fail gate) přes Claude Code hooks. Skill setup-agentic-loop najde .sln/.csproj a test projekty, zapíše pravidla do CLAUDE.md a vygeneruje hooky verify-build.js (PostToolUse) a verify-tests.js (Stop)."
     }
   ]
 }

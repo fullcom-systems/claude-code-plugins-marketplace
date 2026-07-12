@@ -1,0 +1,11 @@
+{
+  "name": "dotnet-agentic-loop",
+  "description": "Zavede v cílovém .NET repozitáři deterministickou agentickou verifikační smyčku (build + testy jako automatický pass/fail gate) přes Claude Code hooks. Skill setup-agentic-loop najde .sln/.csproj a test projekty, zapíše pravidla do CLAUDE.md a vygeneruje hooky verify-build.js (PostToolUse) a verify-tests.js (Stop).",
+  "version": "1.0.0",
+  "author": {
+    "name": "Fullsys",
+    "email": "ladislav.filip@fullsys.cz"
+  },
+  "license": "MIT",
+  "keywords": ["dotnet", "agentic-loop", "hooks", "build", "test", "verification", "fullsys"]
+}
