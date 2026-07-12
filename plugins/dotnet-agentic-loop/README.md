@@ -61,6 +61,11 @@ Tohle musí být k dispozici v prostředí **cílového** repozitáře, kde skil
 | [Claude Code](https://code.claude.com/docs) | Spouští skill i hooky | `claude --version` |
 | .NET SDK | `dotnet build` / `dotnet test` | `dotnet --version` |
 | Node.js | Hook skripty jsou v Node.js | `node --version` |
+| [context7](https://github.com/upstash/context7) (MCP, volitelné) | Ověření aktuálního schématu hooků při běhu skillu | přítomen v MCP |
+
+> [!NOTE]
+> context7 je **volitelný**. Když je dostupný (na dev strojích Fullsys bývá v globálním user MCP), skill přes
+> něj ověří aktuální schéma hooků Claude Code; bez něj funguje dál s vestavěným formátem.
 
 ## Instalace
 
@@ -106,7 +111,8 @@ Tohle musí být k dispozici v prostředí **cílového** repozitáře, kde skil
 - Hooky volají výhradně lokální `dotnet` CLI — **žádný odchozí síťový provoz** (v souladu s principem
   „no direct outbound calls from skills — use MCP servers").
 - Runtime soubory hooků (`.test-retry-count`, `.dotnet-lock/`, `.changed-files`) se neverzují.
-- **Schéma hooků se mezi verzemi Claude Code vyvíjí.** Pokud registrace nesedí, ověř ji proti aktuální
-  [dokumentaci hooků](https://code.claude.com/docs/en/hooks).
+- **Schéma hooků se mezi verzemi Claude Code vyvíjí.** Skill ho při registraci ověří přes context7 (MCP),
+  je-li dostupný; jinak použije vestavěný formát a upozorní. Získávání dokumentace jde přes MCP (context7),
+  ne přímým voláním webu. Případné ruční ověření: [dokumentace hooků](https://code.claude.com/docs/en/hooks).
 
 Pravidla přispívání: viz kořenový [CONTRIBUTING.md](../../CONTRIBUTING.md).
