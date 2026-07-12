@@ -92,9 +92,12 @@ Jak hooky fungují (kontext pro případné úpravy, samotné soubory neměň na
   spustí `dotnet build`. Rychlá zpětná vazba. `exit 0` = žádná námitka, `exit 2` + stderr = feedback Claude
   (u PostToolUse akci neblokuje, ale Claude ho vidí a hned reaguje). Na jiné soubory nereaguje.
 - **`verify-tests.js` (Stop)** — gate před dokončením tahu: `exit 2` **blokuje** ukončení, dokud `dotnet test`
-  neprojde. Pojistka proti nekonečné smyčce je **primárně retry counter** (`.test-retry-count`, strop
-  `MAX_RETRIES = 5`, reset na 0 po úspěchu i po dosažení stropu); `stop_hook_active` je jen **sekundární**
-  pojistka — nikdy se na něj bezpodmínečně neexituje 0 (jinak by counter i MAX_RETRIES byly mrtvý kód).
+  neprojde. Testy běží primárně s `--no-build` (build už zajistil PostToolUse hook výše) kvůli rychlosti;
+  když `--no-build` nemá co spustit (neaktuální build nebo `TEST_TARGET` přesahuje `BUILD_TARGET`), hook
+  jednorázově spadne zpět na plný `dotnet test`, aby výsledek zůstal autoritativní. Pojistka proti nekonečné
+  smyčce je **primárně retry counter** (`.test-retry-count`, strop `MAX_RETRIES = 5`, reset na 0 po úspěchu
+  i po dosažení stropu); `stop_hook_active` je jen **sekundární** pojistka — nikdy se na něj bezpodmínečně
+  neexituje 0 (jinak by counter i MAX_RETRIES byly mrtvý kód).
 - **Sdílený zámek `.dotnet-lock/`** — atomický `mkdir` (test-and-set) brání souběhu více `dotnet` procesů
   nad stejným řešením (zámky na `obj`/`bin` → falešné chyby). „Stale" zámek starší než 180 s se ukradne;
   Stop hook na zámek chvíli blokujícím způsobem čeká (`Atomics.wait`, max 60 s), protože test gate musí proběhnout.

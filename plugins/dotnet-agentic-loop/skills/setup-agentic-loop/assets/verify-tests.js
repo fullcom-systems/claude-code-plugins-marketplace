@@ -70,6 +70,32 @@ function acquireLockBlocking(maxWaitMs) {
   return acquireLock();
 }
 
+// Spustí testy. Primárně bez buildu (build po editaci zajišťuje verify-build.js / PostToolUse),
+// což ušetří opakovaný build uvnitř `dotnet test`. Vrací { ok:true } nebo { ok:false, err }.
+function runTests(noBuild) {
+  try {
+    execSync(`dotnet test "${TEST_TARGET}" ${noBuild ? "--no-build " : ""}--nologo`, {
+      stdio: ["ignore", "pipe", "pipe"],
+      timeout: 300_000,
+    });
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, err };
+  }
+}
+
+function isTimeout(err) {
+  return err.killed || err.code === "ETIMEDOUT" || err.signal === "SIGTERM";
+}
+
+// Rozliší skutečné selhání testů od situace, kdy `--no-build` neměl co spustit (chybějící nebo
+// neaktuální build, případně TEST_TARGET zahrnuje projekty mimo BUILD_TARGET) — v tom případě
+// ve výstupu není žádný testový souhrn. Verzově stabilnější než parsování MSBuild hlášek.
+function testsActuallyRan(err) {
+  const output = (err.stdout?.toString() || "") + (err.stderr?.toString() || "");
+  return /Passed!|Failed!|Passed:|Failed:|No test (is available|matches|source files)/i.test(output);
+}
+
 const input = readStdin();
 const retries = getRetryCount();
 
@@ -96,20 +122,25 @@ if (input.stop_hook_active && retries === 0) {
 
 const locked = acquireLockBlocking(60_000);
 
+// Primárně zkus rychlejší běh bez buildu. Když `--no-build` neměl co spustit (build nebyl
+// aktuální nebo TEST_TARGET přesahuje BUILD_TARGET) a nešlo o timeout, spadni jednorázově
+// zpět na plný build, ať je výsledek autoritativní. Timeout fallbackem neřešíme.
+let result = runTests(true);
+if (!result.ok && !isTimeout(result.err) && !testsActuallyRan(result.err)) {
+  result = runTests(false);
+}
+
 let exitCode = 0;
 let message = "";
-try {
-  execSync(`dotnet test "${TEST_TARGET}" --nologo`, {
-    stdio: ["ignore", "pipe", "pipe"],
-    timeout: 300_000,
-  });
+if (result.ok) {
   setRetryCount(0);
-} catch (err) {
+} else {
+  const err = result.err;
   setRetryCount(retries + 1);
   exitCode = 2;
 
   // Timeout není totéž co selhání testu — nehlas zavádějící "testy neprošly".
-  if (err.killed || err.code === "ETIMEDOUT" || err.signal === "SIGTERM") {
+  if (isTimeout(err)) {
     message =
       `Testy překročily časový limit (pokus ${retries + 1}/${MAX_RETRIES}) — ` +
       `nemusí to znamenat chybu v kódu (pomalé prostředí, cold restore NuGet balíčků). ` +
