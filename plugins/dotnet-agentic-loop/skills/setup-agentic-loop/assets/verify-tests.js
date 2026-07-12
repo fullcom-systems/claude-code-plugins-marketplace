@@ -1,0 +1,133 @@
+#!/usr/bin/env node
+// Stop hook: neumožní Claude ukončit tah, dokud testy neprojdou.
+// Pojistka proti nekonečné smyčce = retry counter (stop_hook_active je jen sekundární).
+
+const { execSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
+
+const TEST_TARGET = "{{TEST_TARGET}}"; // <- doplněno při /setup-agentic-loop
+const MAX_RETRIES = 5;
+const COUNTER_FILE = path.join(__dirname, ".test-retry-count");
+
+function readStdin() {
+  try {
+    return JSON.parse(fs.readFileSync(0, "utf-8"));
+  } catch {
+    return {};
+  }
+}
+
+function getRetryCount() {
+  try {
+    return parseInt(fs.readFileSync(COUNTER_FILE, "utf-8"), 10) || 0;
+  } catch {
+    return 0;
+  }
+}
+
+function setRetryCount(n) {
+  fs.writeFileSync(COUNTER_FILE, String(n));
+}
+
+// Sdílený zámek se `verify-build.js` — ať `dotnet test` (který taky buildí) neběží souběžně
+// s doběhávajícím buildem nad stejným řešením a nevzniknou falešné chyby ze zámků na obj/bin.
+const LOCK_DIR = path.join(__dirname, ".dotnet-lock");
+const LOCK_STALE_MS = 180_000;
+
+function acquireLock() {
+  try {
+    fs.mkdirSync(LOCK_DIR);
+    return true;
+  } catch {
+    try {
+      if (Date.now() - fs.statSync(LOCK_DIR).mtimeMs > LOCK_STALE_MS) {
+        fs.rmSync(LOCK_DIR, { recursive: true, force: true });
+        fs.mkdirSync(LOCK_DIR);
+        return true;
+      }
+    } catch {}
+    return false;
+  }
+}
+
+function releaseLock() {
+  try {
+    fs.rmSync(LOCK_DIR, { recursive: true, force: true });
+  } catch {}
+}
+
+// Test gate MUSÍ proběhnout, takže na zámek (drží ho třeba doběhávající build) chvíli počkáme.
+// Atomics.wait je synchronní cross-platform sleep. Když se do maxWaitMs nedočkáme, spustíme
+// testy i tak — případný souběžný fail zachytí retry counter při dalším pokusu.
+function acquireLockBlocking(maxWaitMs) {
+  const start = Date.now();
+  const sab = new Int32Array(new SharedArrayBuffer(4));
+  while (Date.now() - start < maxWaitMs) {
+    if (acquireLock()) return true;
+    Atomics.wait(sab, 0, 0, 500);
+  }
+  return acquireLock();
+}
+
+const input = readStdin();
+const retries = getRetryCount();
+
+// Pojistka proti nekonečné smyčce = tenhle retry counter. Stop hook s exit 2 vynutí
+// pokračování, takže `stop_hook_active` je true při KAŽDÉM dalším pokusu, ne jen jednou.
+// Proto se na něj NESMÍ bezpodmínečně exitovat 0 — jinak by se testy ověřily jen jednou
+// a counter i MAX_RETRIES by byly mrtvý kód. Loop tady stropuje counter, který se resetuje
+// na úspěch a po dosažení MAX_RETRIES.
+if (retries >= MAX_RETRIES) {
+  setRetryCount(0);
+  process.stderr.write(
+    `Verifikace testů přeskočena po ${MAX_RETRIES} pokusech — zkontroluj ručně, ` +
+      `možná je problém mimo dosah automatické opravy (rozbité prostředí, chybějící závislost apod.).\n`
+  );
+  process.exit(0); // necháme Claude zastavit, dál by to bylo kontraproduktivní
+}
+
+// Sekundární pojistka: jsme ve vynuceném pokračování (stop_hook_active), ale counter je
+// na nule — to znamená, že se stav nepodařilo uložit (rozbitý counter). Bez funkčního
+// counteru hrozí zacyklení, proto radši necháme Claude zastavit.
+if (input.stop_hook_active && retries === 0) {
+  process.exit(0);
+}
+
+const locked = acquireLockBlocking(60_000);
+
+let exitCode = 0;
+let message = "";
+try {
+  execSync(`dotnet test "${TEST_TARGET}" --nologo`, {
+    stdio: ["ignore", "pipe", "pipe"],
+    timeout: 300_000,
+  });
+  setRetryCount(0);
+} catch (err) {
+  setRetryCount(retries + 1);
+  exitCode = 2;
+
+  // Timeout není totéž co selhání testu — nehlas zavádějící "testy neprošly".
+  if (err.killed || err.code === "ETIMEDOUT" || err.signal === "SIGTERM") {
+    message =
+      `Testy překročily časový limit (pokus ${retries + 1}/${MAX_RETRIES}) — ` +
+      `nemusí to znamenat chybu v kódu (pomalé prostředí, cold restore NuGet balíčků). ` +
+      `Zvaž zúžení TEST_TARGET nebo delší timeout.\n`;
+  } else {
+    const output = (err.stdout?.toString() || "") + (err.stderr?.toString() || "");
+    const summary = output
+      .split("\n")
+      .filter((l) => /Failed|Error Message|Passed!|Failed!/i.test(l))
+      .slice(0, 30)
+      .join("\n");
+    message =
+      `Testy neprošly (pokus ${retries + 1}/${MAX_RETRIES}):\n${summary || output.slice(-2000)}\n` +
+      `Oprav selhávající testy před dokončením úkolu.\n`;
+  }
+}
+
+// Uvolni zámek jen když jsme ho fakt získali (jinak bychom smazali cizí).
+if (locked) releaseLock();
+if (message) process.stderr.write(message);
+process.exit(exitCode);
