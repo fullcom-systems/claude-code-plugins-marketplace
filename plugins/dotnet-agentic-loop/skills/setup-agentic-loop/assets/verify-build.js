@@ -64,10 +64,24 @@ if (!acquireLock()) {
 let exitCode = 0;
 let message = "";
 try {
-  execSync(`dotnet build "${BUILD_TARGET}" --nologo -v q`, {
+  const stdout = execSync(`dotnet build "${BUILD_TARGET}" --nologo -v q`, {
     stdio: ["ignore", "pipe", "pipe"],
     timeout: 120_000,
-  });
+  }).toString();
+  // Build prošel. Vytáhni analyzátorové/kompilátorové warnings (CA/S/RCS/IDE/CS…) v právě editovaném
+  // souboru a předej je jako NEBLOKUJÍCÍ feedback — build ani smyčku to nezastaví, jen na ně upozorní
+  // (měkký gate). Filtr na editovaný soubor drží šum nízko i v projektech s nahromaděnými warningy.
+  const base = path.basename(filePath);
+  const warnings = stdout
+    .split("\n")
+    .filter((l) => /:\s*warning\s+[A-Z]{1,4}\d+/i.test(l) && (base ? l.includes(base) : true))
+    .slice(0, 20);
+  if (warnings.length) {
+    exitCode = 2;
+    message =
+      `Build po editaci ${filePath} prošel, ale statická analýza hlásí warnings ` +
+      `(neblokující — zvaž opravu):\n${warnings.join("\n")}\n`;
+  }
 } catch (err) {
   exitCode = 2;
   // Timeout není totéž co chyba kompilace — nehlas zavádějící "build selhal".

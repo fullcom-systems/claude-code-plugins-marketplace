@@ -34,7 +34,8 @@ hooků v `settings.json` → volitelná monorepo optimalizace → ověření a s
 ## Jak smyčka funguje
 
 Dva hooky drží agenta uvnitř verifikační smyčky. `verify-build.js` dává rychlou zpětnou vazbu po každé
-editaci, `verify-tests.js` je závěrečný gate, který nepustí agenta „skončit" s červenými testy.
+editaci (build + neblokující analyzátorové warnings), `verify-tests.js` je závěrečný gate, který nepustí
+agenta „skončit" s červenými testy.
 
 ```mermaid
 flowchart TD
@@ -96,11 +97,12 @@ Tohle musí být k dispozici v prostředí **cílového** repozitáře, kde skil
 
 | Cesta | Účel |
 |---|---|
-| `.claude/hooks/verify-build.js` | PostToolUse hook — build po každé editaci `.cs`/`.csproj` |
+| `.claude/hooks/verify-build.js` | PostToolUse hook — build + analyzátorové warnings po každé editaci `.cs`/`.csproj` |
 | `.claude/hooks/verify-tests.js` | Stop hook — testy jako gate před dokončením tahu |
 | `.claude/settings.json` | Registrace hooků (**merge** do existující konfigurace, nikdy přepis) |
 | `CLAUDE.md` | Sekce s pravidly smyčky (build/test cíle, „úkol není hotový bez zelených testů") + pod-sekce „Aktuální dokumentace (context7)" pro ověřování .NET/NuGet API |
 | `.gitignore` | Ignorování runtime souborů hooků (`.test-retry-count`, `.dotnet-lock/`, `.changed-files`) |
+| `Directory.Build.props` / `Directory.Packages.props` | (volitelné, Krok 5) reference na `SonarAnalyzer.CSharp` — statická analýza jako součást buildu ve smyčce |
 
 Šablony hooků jsou součástí pluginu ve složce
 [`skills/setup-agentic-loop/assets/`](./skills/setup-agentic-loop/assets/); obsahují placeholdery
