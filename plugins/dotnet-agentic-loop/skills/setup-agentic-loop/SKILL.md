@@ -66,6 +66,14 @@ Pravidla:
   místo opakovaných pokusů donekonečna.
 - Automatizovaná kontrola běží i bez tebe přes hooks (viz `.claude/hooks/`) — bereš ji jako zdroj pravdy,
   ne jako formalitu.
+
+### Aktuální dokumentace (context7)
+
+- Před použitím externího .NET API / NuGet balíčku si přes context7 ověř aktuální signaturu a konfiguraci
+  (`resolve-library-id` → `query-docs`), je-li context7 dostupný.
+- Zvlášť u novějších verzí frameworků a balíčků, kde se API mění — halucinované API stejně zachytí build
+  a stojí to iteraci navíc.
+- Dokumentaci ber přes context7 (MCP), ne přímým voláním webu.
 ```
 
 Nahraď `{{BUILD_TARGET}}` a `{{TEST_TARGET}}` skutečnými cestami zjištěnými v Kroku 1.

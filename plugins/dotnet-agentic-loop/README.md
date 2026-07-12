@@ -99,7 +99,7 @@ Tohle musí být k dispozici v prostředí **cílového** repozitáře, kde skil
 | `.claude/hooks/verify-build.js` | PostToolUse hook — build po každé editaci `.cs`/`.csproj` |
 | `.claude/hooks/verify-tests.js` | Stop hook — testy jako gate před dokončením tahu |
 | `.claude/settings.json` | Registrace hooků (**merge** do existující konfigurace, nikdy přepis) |
-| `CLAUDE.md` | Sekce s pravidly smyčky (build/test cíle, „úkol není hotový bez zelených testů") |
+| `CLAUDE.md` | Sekce s pravidly smyčky (build/test cíle, „úkol není hotový bez zelených testů") + pod-sekce „Aktuální dokumentace (context7)" pro ověřování .NET/NuGet API |
 | `.gitignore` | Ignorování runtime souborů hooků (`.test-retry-count`, `.dotnet-lock/`, `.changed-files`) |
 
 Šablony hooků jsou součástí pluginu ve složce
