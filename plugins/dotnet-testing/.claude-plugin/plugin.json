@@ -1,0 +1,11 @@
+{
+  "name": "dotnet-testing",
+  "description": "Sada skillů pro testování libovolného .NET projektu. Obsahuje skill dotnet-unit-tests (unit testy podle konvencí repozitáře) a dotnet-http-tests (.http / REST Client testy s přepínáním environmentů a CI/CD přes httpyac pro Azure DevOps i GitHub Actions).",
+  "version": "1.0.0",
+  "author": {
+    "name": "Fullsys",
+    "email": "ladislav.filip@fullsys.cz"
+  },
+  "license": "MIT",
+  "keywords": ["dotnet", "csharp", "testing", "unit-testing", "xunit", "http", "rest-client", "httpyac", "api-testing", "fullsys"]
+}
