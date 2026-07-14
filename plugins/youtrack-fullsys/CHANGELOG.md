@@ -5,6 +5,12 @@ Všechny významné změny v tomto projektu budou dokumentovány v tomto souboru
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)
 a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
+## [1.0.1] - 2026-07-14
+
+### Fixed
+
+- Opravena URL příkazu `/plugin marketplace add` v README.md (odkazovala na neexistující `fullsys/claude-plugin-marketplace` místo skutečného repozitáře)
+
 ## [1.0.0] - 2026-05-31
 
 ### Added

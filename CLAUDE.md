@@ -64,7 +64,7 @@ Skripty běží v Bash (Linux/macOS/CI). Na Windows spouštěj přes WSL nebo Gi
 
 ## Přidání nového pluginu
 
-1. Vytvořit `plugins/<name>/.claude-plugin/plugin.json` podle vzoru `plugins/example-hello-world/` nebo `plugins/example-mcp/`.
+1. Vytvořit `plugins/<name>/.claude-plugin/plugin.json` podle vzoru existujícího pluginu — např. `plugins/docs-architect/` (skill) nebo `plugins/youtrack-fullsys/` (MCP).
 2. Přidat komponenty (`skills/`, `.mcp.json`).
 3. Zaregistrovat plugin do `.claude-plugin/marketplace.json`.
 4. Spustit `./scripts/validate-marketplace.sh`.
@@ -80,7 +80,7 @@ Po **každé** změně pluginu (skill, manifest, MCP konfigurace, skripty, dokum
    - **MAJOR** — breaking change (přejmenování skillu, změna chování, odebrání funkčnosti)
 2. Doplnit záznam do `plugins/<name>/CHANGELOG.md` ([Keep a Changelog](https://keepachangelog.com/cs/) — sekce `Added` / `Changed` / `Fixed` / `Removed`, datum ve formátu `YYYY-MM-DD`).
 3. Spustit `./scripts/validate-marketplace.sh`.
-4. Aktualizovat KB článek [FIR-A-195](https://youtrack.fullsys.cz/articles/FIR-A-195) (Marketplace pro Claude Code) — pokud se změnil seznam pluginů nebo jejich účel, promítnout to i do tabulky v článku. Toto je součást PR se změnou pluginu.
+4. Aktualizovat KB článek [FIR-A-125](https://youtrack.fullsys.cz/articles/FIR-A-125) v kapitole „Marketplace a instalace" — pokud se změnil seznam pluginů nebo jejich účel, promítnout to i do tabulky v článku. Toto je součást PR se změnou pluginu.
 
 ## Odinstalace pluginu
 

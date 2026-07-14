@@ -11,10 +11,13 @@ Interní katalog Claude Code pluginů Fullsys — **skills** a **MCP servery**, 
 
 | Plugin | Typ | Popis |
 |---|---|---|
-| [docs-architect](plugins/docs-architect/) | skill | Tvorba a údržba technické dokumentace repozitáře (README, CONTRIBUTING, CHANGELOG, API spec, architektura) |
-| [repo-architect](plugins/repo-architect/) | skill | Analýza, návrh a oprava struktury složek a souborů GitHub repozitáře dle open-source best-practice standardů |
-| [ai-agnostic-setup](plugins/ai-agnostic-setup/) | skill + scripty | Synchronizace instrukcí, skills a MCP serverů mezi Claude Code, Cursor a GitHub Copilot; nastavení po klonu, diagnostika |
+| [docs-architect](plugins/docs-architect/) | skill | Tvorba a údržba technické dokumentace repozitáře (README, CONTRIBUTING, CHANGELOG, API spec, architektura, ADR) |
 | [youtrack-fullsys](plugins/youtrack-fullsys/) | MCP | Napojení na interní YouTrack Fullsys — tickety, projekty, boardy, knowledge base |
+| [repo-architect](plugins/repo-architect/) | skill | Analýza, návrh a oprava struktury složek a souborů GitHub repozitáře dle open-source best-practice standardů |
+| [commit](plugins/commit/) | skill | Generování commit zpráv podle Conventional Commits a interních konvencí NextFIS (český subject, ticket z větve) |
+| [pr](plugins/pr/) | skill | Vytváření pull requestů podle šablony NextFIS (ticket z větve, popis změn, dopady, testování) |
+| [pps-workflow](plugins/pps-workflow/) | skill | Git/PR skilly pro projekty PPS v Azure DevOps on-premise — commit, tvorba PR, zapracování review komentářů a auto-fix SonarQube |
+| [dotnet-agentic-loop](plugins/dotnet-agentic-loop/) | skill | Zavedení deterministické agentické verifikační smyčky (build + testy jako pass/fail gate) v .NET repozitáři přes Claude Code hooks |
 
 ## Co obsahuje
 
@@ -32,10 +35,10 @@ Index marketplace je [`.claude-plugin/marketplace.json`](.claude-plugin/marketpl
 V Claude Code:
 
 ```
-/plugin marketplace add fullsys/claude-plugin-marketplace
+/plugin marketplace add fullcom-systems/claude-code-plugins-marketplace
 ```
 
-(nebo URL repozitáře, případně lokální cesta `./plugins-marketplace` pro vývoj).
+(nebo URL repozitáře `https://github.com/fullcom-systems/claude-code-plugins-marketplace`, případně lokální cesta pro vývoj).
 
 ### Instalace pluginu
 

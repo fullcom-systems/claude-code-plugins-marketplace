@@ -9,7 +9,7 @@ Plugin nese konfiguraci jednoho HTTP MCP serveru `youtrack`. Konfigurace je v so
 ## Instalace
 
 ```
-/plugin marketplace add fullsys/claude-plugin-marketplace
+/plugin marketplace add fullcom-systems/claude-code-plugins-marketplace
 /plugin install youtrack-fullsys@fullsys-plugins
 ```
 

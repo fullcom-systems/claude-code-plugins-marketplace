@@ -103,7 +103,7 @@ Konfigurace v `.mcp.json` používá standardní formát MCP:
 ## Postup pro nový plugin
 
 1. **Větev** — vytvořte feature větev z `main`.
-2. **Zkopírujte šablonu** — `plugins/example-hello-world/` (skill) nebo `plugins/example-mcp/` (MCP).
+2. **Použijte existující plugin jako šablonu** — např. [`plugins/docs-architect/`](plugins/docs-architect/) pro plugin se skillem nebo [`plugins/youtrack-fullsys/`](plugins/youtrack-fullsys/) pro plugin s MCP serverem.
 3. **Vyplňte manifest** — `.claude-plugin/plugin.json`.
 4. **Komponenty** — skills do `skills/`, MCP do `.mcp.json`.
 5. **Registrace** — přidejte plugin do `.claude-plugin/marketplace.json` (pole `plugins`).
