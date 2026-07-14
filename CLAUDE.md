@@ -64,7 +64,7 @@ Skripty běží v Bash (Linux/macOS/CI). Na Windows spouštěj přes WSL nebo Gi
 
 ## Přidání nového pluginu
 
-1. Vytvořit `plugins/<name>/.claude-plugin/plugin.json` podle vzoru `plugins/example-hello-world/` nebo `plugins/example-mcp/`.
+1. Vytvořit `plugins/<name>/.claude-plugin/plugin.json` podle vzoru existujícího pluginu — např. `plugins/docs-architect/` (skill) nebo `plugins/youtrack-fullsys/` (MCP).
 2. Přidat komponenty (`skills/`, `.mcp.json`).
 3. Zaregistrovat plugin do `.claude-plugin/marketplace.json`.
 4. Spustit `./scripts/validate-marketplace.sh`.
