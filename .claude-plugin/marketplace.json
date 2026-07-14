@@ -41,6 +41,11 @@
       "name": "dotnet-agentic-loop",
       "source": "./plugins/dotnet-agentic-loop",
       "description": "Zavede v cílovém .NET repu deterministickou agentickou verifikační smyčku (build + testy jako automatický pass/fail gate) přes Claude Code hooks. Skill setup-agentic-loop najde .sln/.csproj a test projekty, zapíše pravidla do CLAUDE.md a vygeneruje hooky verify-build.js (PostToolUse) a verify-tests.js (Stop)."
+    },
+    {
+      "name": "dotnet-testing",
+      "source": "./plugins/dotnet-testing",
+      "description": "Sada skillů pro testování libovolného .NET projektu. Obsahuje skill dotnet-unit-tests (unit testy podle konvencí repozitáře) a dotnet-http-tests (.http / REST Client testy s přepínáním environmentů a CI/CD přes httpyac pro Azure DevOps i GitHub Actions)."
     }
   ]
 }
