@@ -1,7 +1,7 @@
 {
   "name": "youtrack-fullsys",
   "description": "MCP plugin pro napojení na interní YouTrack Fullsys (https://youtrack.fullsys.cz). Zpřístupní Claude práci s tickety, projekty, boardy a knowledge base.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Fullsys",
     "email": "ladislav.filip@fullsys.cz"
