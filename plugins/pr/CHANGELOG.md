@@ -5,6 +5,14 @@ Všechny významné změny v tomto projektu budou dokumentovány v tomto souboru
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)
 a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
+## [1.1.0] - 2026-07-15
+
+### Changed
+
+- Skill `pr` detekuje výchozí větev (`main`/`master`) místo napevno zadaného `master`
+- Postup vytvoření PR doplněn o push větve a kontrolu, zda PR pro větev už neexistuje
+- Sekce Verze doplněna o zdroj čísla verze (`Directory.Build.props`, `*.csproj`, git tag)
+
 ## [1.0.0] - 2026-06-16
 
 ### Added

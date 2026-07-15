@@ -15,12 +15,14 @@ Tento skill vytváří pull requesty podle šablony projektu NextFIS.
 
 ## Postup vytvoření PR
 
-1. **Zjisti stav repozitáře**:
+1. **Zjisti stav repozitáře a výchozí větev** (`main`/`master` nehádej — zjisti):
    ```bash
    git status
    git branch --show-current
-   git log master..HEAD --oneline
-   git diff master...HEAD
+   BASE=$(basename "$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null)")
+   BASE=${BASE:-master}   # fallback; pokud je prázdné, nastav origin/HEAD: git remote set-head origin -a
+   git log "$BASE"..HEAD --oneline
+   git diff "$BASE"...HEAD
    ```
 
 2. **Extrahuj ticket z názvu větve**:
@@ -37,7 +39,7 @@ Tento skill vytváří pull requesty podle šablony projektu NextFIS.
 
 4. **Vyplň šablonu PR** podle pravidel níže
 
-5. **Vytvoř PR pomocí gh CLI**
+5. **Pushni větev a vytvoř PR pomocí gh CLI** (viz sekce Vytvoření PR)
 
 ## Formát PR
 
@@ -88,7 +90,8 @@ Krátký popis jak testovat nebo odkaz na ticket.
 ### Verze
 
 - Formát: `YY.MM.build.revision` (např. `26.01.1.10`)
-- Pokud se verze nezměnila, ponech předchozí nebo se zeptej
+- **Zdroj verze** (zjisti, nehádej): `Directory.Build.props` (`<Version>`), `*.csproj` (`<Version>` / `<AssemblyVersion>`), nebo poslední git tag (`git describe --tags --abbrev=0`)
+- Pokud verzi nelze zjistit ani se nezměnila, ponech předchozí nebo se zeptej
 
 ### Popis změn
 
@@ -121,12 +124,23 @@ Označ způsoby testování a přidej krátký popis nebo odkaz na ticket.
 
 ## Vytvoření PR
 
-```bash
-gh pr create --base master --title "TICKET: Stručný název" --body "$(cat <<'EOF'
-<vyplněná šablona>
-EOF
-)"
-```
+1. **Pushni větev** (bez pushnuté větve `gh pr create` selže):
+   ```bash
+   git push -u origin HEAD
+   ```
+
+2. **Zkontroluj, zda PR pro větev už neexistuje** — pokud ano, jen ho aktualizuj (`gh pr edit`) místo vytváření nového:
+   ```bash
+   gh pr view --json url,state 2>/dev/null   # vrátí-li PR, použij gh pr edit --body ...
+   ```
+
+3. **Vytvoř PR proti výchozí větvi** (`$BASE` z kroku 1, ne napevno `master`):
+   ```bash
+   gh pr create --base "$BASE" --title "TICKET: Stručný název" --body "$(cat <<'EOF'
+   <vyplněná šablona>
+   EOF
+   )"
+   ```
 
 ## Kontrolní seznam
 
