@@ -22,7 +22,7 @@ testy v jakémkoli .NET repu.
 | Skill | Účel |
 |-------|------|
 | `dotnet-unit-tests` | Zjistí konvence repozitáře (framework, mock/assert knihovny, umístění testů) a vygeneruje/doplní unit testy podle AAA patternu, s XML dokumentací a pojmenováním `{Metoda}_{Scénář}_{Očekávání}`. Detaily syntaxe v `SYNTAX.md`, referenční příklad v `EXAMPLE.md`. |
-| `dotnet-http-tests` | Navrhne strukturu `.http` testů (jeden soubor na doménu/kontroler), environment soubory `http-client.env.json` / `http-client.private.env.json` s přepínáním local/staging/prod, assert bloky httpyac (`> {% client.test(...) %}`) a CI/CD pipeline (`httpyac send … --junit`). Formát kompatibilní s REST Client, httpyac i IntelliJ HTTP Client. Pipeline pro **Azure DevOps** i **GitHub Actions** — reference v `references/`. |
+| `dotnet-http-tests` | Navrhne strukturu `.http` testů (jeden soubor na doménu/kontroler), environment soubory `http-client.env.json` / `http-client.private.env.json` s přepínáním local/staging/prod, assert bloky httpyac — deklarativní `??` i skriptovací `> {% client.test(...) %}` — a CI/CD pipeline (`httpyac send … --junit`). Formát kompatibilní s REST Client, httpyac i IntelliJ HTTP Client. Pipeline pro **Azure DevOps** i **GitHub Actions** — reference v `references/`. |
 
 Plugin **nemá `.mcp.json`** — pracuje výhradně lokálně se soubory v repozitáři (čtení zdrojových
 tříd, zápis testovacích a `.http` souborů, spuštění `dotnet test`). Samotné HTTP volání provádí
