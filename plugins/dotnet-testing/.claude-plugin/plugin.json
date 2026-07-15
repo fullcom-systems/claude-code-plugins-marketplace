@@ -1,7 +1,7 @@
 {
   "name": "dotnet-testing",
   "description": "Sada skillů pro testování libovolného .NET projektu. Obsahuje skill dotnet-unit-tests (unit testy podle konvencí repozitáře) a dotnet-http-tests (.http / REST Client testy s přepínáním environmentů a CI/CD přes httpyac pro Azure DevOps i GitHub Actions).",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": {
     "name": "Fullsys",
     "email": "ladislav.filip@fullsys.cz"

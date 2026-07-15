@@ -5,6 +5,18 @@ Všechny významné změny v tomto projektu budou dokumentovány v tomto souboru
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)
 a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
+## [1.1.1] - 2026-07-15
+
+### Changed
+
+- Skill `dotnet-http-tests` rozdělen na menší soubory dle vzoru sourozeneckého `dotnet-unit-tests`:
+  podrobná syntaxe assert bloků (deklarativní `??` i skriptovací `> {% client.test(...) %}`,
+  tabulky předmětů/operátorů/predikátů) přesunuta do nového `SYNTAX.md`; kompletní ukázkové
+  `.http` soubory a environment sada (`http-client.env.json` + `http-client.private.env.json`,
+  scénáře 200/400/401, předání tokenu z loginu) do nového `EXAMPLE.md`. `SKILL.md` zůstává jako
+  stručný rozcestník (krok 0, postup, struktura, bezpečnost, kontrolní seznam) s odkazy na oba
+  soubory. Obsah pokynů beze změny, jen reorganizace.
+
 ## [1.1.0] - 2026-07-15
 
 ### Added

@@ -62,7 +62,8 @@ vypadat, jako by je psal někdo, kdo repo zná.
 3. **Navrhni adresářovou strukturu** `.http` souborů (viz níže).
 4. **Vygeneruj / uprav env soubory** — `http-client.env.json` (commitovaný) a šablonu
    `http-client.private.env.json` (gitignored).
-5. **Napiš / doplň `.http` requesty** s proměnnými a assert bloky.
+5. **Napiš / doplň `.http` requesty** s proměnnými a assert bloky (syntaxe → `SYNTAX.md`,
+   ukázkové soubory → `EXAMPLE.md`).
 6. **Vygeneruj CI konfiguraci** dle vybrané platformy (jeden nebo oba reference soubory).
 7. **Shrň bezpečnostní doporučení** (secrets, `.gitignore`) — viz závěr.
 
@@ -95,184 +96,38 @@ mu REST Client, httpyac i IntelliJ HTTP Client. Přepínání environmentu v CI 
 | **Ne-secret** (base URL, ne-citlivé ID) | `http-client.env.json` — **commitovaný** | `baseUrl` |
 | **Secret** (token, heslo, klíč) | **nikdy** natvrdo v commitovaném souboru | `token` |
 
-Secret hodnoty se řeší přes odkaz na proces env proměnnou (`$processEnv`) / `$dotenv`, ne
-zapsáním hodnoty:
-
-```jsonc
-// http-client.env.json  — COMMITOVANÝ, žádné secrety
-{
-  "local":   { "baseUrl": "https://localhost:5001", "token": "{{$processEnv API_TOKEN}}" },
-  "staging": { "baseUrl": "https://staging.example.internal", "token": "{{$processEnv API_TOKEN}}" },
-  "prod":    { "baseUrl": "https://api.example.internal", "token": "{{$processEnv API_TOKEN}}" }
-}
-```
-
-`token` zde **není** secret — je to jen odkaz „vezmi hodnotu z proces env proměnné `API_TOKEN`".
-Skutečná hodnota přijde:
+Secret hodnoty se v commitovaném `http-client.env.json` řeší jen jako **odkaz** na proces env
+proměnnou — `{{$processEnv API_TOKEN}}` (příp. `{{$dotenv API_TOKEN}}`), ne zapsáním hodnoty.
+Takový `token` **není** secret. Skutečná hodnota přijde:
 
 - **lokálně** z `http-client.private.env.json` (gitignored, přepíše hodnotu z commitovaného souboru),
 - **v CI** z pipeline secret / variable group injektované jako env proměnná `API_TOKEN`
   (viz reference dané platformy).
 
-```jsonc
-// http-client.private.env.json  — GITIGNORED, jen lokální dev, placeholdery ne reálné tokeny
-{
-  "local":   { "token": "<DEV_API_TOKEN>" },
-  "staging": { "token": "<STAGING_API_TOKEN>" }
-}
-```
+Kompletní sada obou souborů (commitovaný `http-client.env.json` + gitignored
+`http-client.private.env.json`) je v `EXAMPLE.md`.
 
 > Do commitovaných souborů nikdy nepiš reálné tokeny, hesla, PII ani interní hostnames s
 > citlivým významem — jen placeholdery (`<API_TOKEN>`, `https://api.example.internal`).
 
-## Assert bloky — dvě syntaxe (obě akceptované)
+## Assert bloky — ověření odpovědí
 
-Base URL a token **vždy přes proměnné** (názvy dle konvence repa — např. `{{baseUrl}}`/`{{token}}`
-nebo `{{host}}`/`{{apiKey}}`), nikdy hardcoded. Requesty oddělené `###`. Ověření odpovědi zapiš
-jednou ze dvou syntaxí httpyac — **skill akceptuje obě**, vyber podle složitosti kontroly:
+Každý request, který **ověřuje CI**, musí mít assert — jinak httpyac request jen odešle a nemá
+co reportovat (v JUnit se neobjeví jako test). Čistě manuální / ad-hoc requesty assert mít nemusí.
 
-1. **Deklarativní asserce `??`** — **preferované pro běžné kontroly** stavu, těla a hlaviček.
-   Jeden řádek na podmínku ve tvaru `?? <předmět> <operátor> <hodnota>`. Stručné a čitelné.
-2. **Skriptovací blok `> {% client.test(...) %}`** — pro **složitější logiku**: podmínky, cykly,
-   výpočty nebo předání hodnoty dalšímu requestu (`client.global.set`).
+httpyac nabízí **dvě syntaxe** (skill akceptuje obě, lze je i míchat v jednom souboru):
 
-Obě běží v httpyac lokálně i v CI a obě se objeví v JUnit reportu. Prosté VS Code REST Client
-(`humao.rest-client`) asserce nespouští — to nevadí, ověřování dělá httpyac; REST Client slouží
-k ručnímu odeslání requestu. `??` i `> {% client.test %}` lze v jednom souboru i míchat.
+- **Deklarativní asserce `??`** — **preferováno** pro běžné kontroly stavu, těla a hlaviček
+  (`?? status == 200`, `?? body == true`). Jeden řádek na podmínku.
+- **Skriptovací blok `> {% client.test(...) %}`** — pro složitější logiku (výpočty, iterace nad
+  polem, předání hodnoty dalšímu requestu přes `client.global.set`).
 
-### Deklarativní asserce `??`
+Base URL i token zapisuj **vždy přes proměnné** (`{{baseUrl}}`/`{{token}}` nebo
+`{{host}}`/`{{apiKey}}`), nikdy hardcoded. Requesty odděluj `###`.
 
-Řádky `??` následují **za tělem requestu**. Předmět, operátor a očekávaná hodnota:
-
-| Předmět | Příklad | Význam |
-|---------|---------|--------|
-| `status` | `?? status == 200` | HTTP status kód |
-| `body` (celé tělo) | `?? body == true` | celé tělo odpovědi se rovná hodnotě |
-| `body <cesta>` | `?? body status_code == 400` | vlastnost z JSON těla (JSONPath; `$.` je volitelný) |
-| `header <název>` | `?? header www-authenticate == Bearer` | hodnota hlavičky odpovědi |
-| `duration` | `?? duration < 5000` | doba odezvy v ms |
-
-Operátory: `==`, `!=`, `>`, `<`, `>=`, `<=`, `contains`, `startsWith`, `endsWith`,
-`matches` (regex). Predikáty bez hodnoty: `isNumber`, `isString`, `isBoolean`, `isArray`,
-`exists`. Řetězcová hodnota se píše **bez uvozovek** (`?? body message == One or more errors occurred!`).
-
-**Ukázka — deklarativní `??` (preferováno):**
-
-```http
-### Other movements - OK (všechna pole)
-POST {{host}}/confirmation/other-movements
-Authorization: Bearer {{apiKey}}
-Content-Type: application/json
-
-{
-  "warehouse": "W1",
-  "location_code_host_old": "LOC-A",
-  "location_code_host_new": "LOC-B",
-  "movement_type": "MOVE",
-  "message_id": "msg-001",
-  "item_number": "ITEM-001",
-  "quantity": 10,
-  "status_quality": "OK",
-  "lot": "LOT-001",
-  "expiration_date": "2026-12-31",
-  "comment": "Testovací pohyb"
-}
-
-?? status == 200
-?? body == true
-
-### Other movements - OK (jen povinná pole)
-POST {{host}}/confirmation/other-movements
-Authorization: Bearer {{apiKey}}
-Content-Type: application/json
-
-{
-  "warehouse": "W1",
-  "item_number": "ITEM-001"
-}
-
-?? status == 200
-?? body == true
-
-### Other movements - chybí povinné pole warehouse (očekává 400)
-POST {{host}}/confirmation/other-movements
-Authorization: Bearer {{apiKey}}
-Content-Type: application/json
-
-{
-  "item_number": "ITEM-001"
-}
-
-?? status == 400
-?? body status_code == 400
-?? body message == One or more errors occurred!
-
-### Other movements - prázdné tělo requestu (očekává 400)
-POST {{host}}/confirmation/other-movements
-Authorization: Bearer {{apiKey}}
-Content-Type: application/json
-
-?? status == 400
-?? body status_code == 400
-
-### Other movements - chybí hlavička Authorization (očekává 401)
-POST {{host}}/confirmation/other-movements
-Content-Type: application/json
-
-{
-  "warehouse": "W1",
-  "item_number": "ITEM-001"
-}
-
-?? status == 401
-?? header www-authenticate == Bearer
-```
-
-### Skriptovací blok `> {% client.test(...) %}`
-
-Pro kontroly, které deklarativní `??` neunese (výpočet, iterace nad polem, uložení hodnoty pro
-další request):
-
-```http
-### Seznam zákazníků vrátí 200 a neprázdné pole
-GET {{baseUrl}}/api/customers
-Authorization: Bearer {{token}}
-Accept: application/json
-
-> {%
-  client.test("status je 200", function () {
-    client.assert(response.status === 200, "Očekáván status 200, vráceno " + response.status);
-  });
-  client.test("odpověď je neprázdné pole", function () {
-    client.assert(Array.isArray(response.parsedBody) && response.parsedBody.length > 0,
-      "Očekáváno neprázdné pole zákazníků");
-  });
-%}
-
-### Login uloží token pro další requesty
-POST {{baseUrl}}/api/auth/login
-Content-Type: application/json
-
-{ "user": "user@example.com", "password": "{{$processEnv TEST_PASSWORD}}" }
-
-> {%
-  client.test("status je 200", function () {
-    client.assert(response.status === 200, "Očekáván status 200");
-  });
-  client.global.set("token", response.parsedBody.token);
-%}
-```
-
-Užitečné vlastnosti ve skriptovacím bloku: `response.status`, `response.headers`, `response.body`
-(text), `response.parsedBody` (JSON), `client.assert(cond, message)`, `client.global.set(k, v)`
-(předání hodnoty dalšímu requestu, např. tokenu z login požadavku).
-
-### Assert bloky — kdy jsou povinné
-
-- **Povinné** pro každý request, který **ověřuje CI** — bez asserce (`??` ani `client.test(...)`)
-  httpyac request jen odešle a nemá co reportovat (v JUnit se neobjeví jako test).
-- **Nepovinné** pro čistě manuální / ad-hoc requesty, které slouží k ručnímu prozkoušení a CI
-  je nespouští.
+Podrobnou syntaxi obou variant (tabulky předmětů, operátorů a predikátů, vlastnosti skriptovacího
+bloku, kdy je assert povinný) najdeš v `SYNTAX.md`; kompletní ukázkové `.http` soubory (scénáře
+200/400/401, předání tokenu z loginu) v `EXAMPLE.md`.
 
 ## Spuštění v CI — společný příkaz
 
@@ -343,6 +198,10 @@ Před dokončením ověř:
 
 ## Další soubory
 
+- `SYNTAX.md` — podrobná syntaxe assert bloků httpyac (deklarativní `??` i skriptovací
+  `> {% client.test(...) %}`, tabulky předmětů/operátorů/predikátů, kdy je assert povinný).
+- `EXAMPLE.md` — kompletní ukázkové `.http` soubory a environment sada (`http-client.env.json`
+  + `http-client.private.env.json`, scénáře 200/400/401, předání tokenu z loginu).
 - `references/azure-devops.md` — YAML pipeline pro Azure DevOps (NodeTool, httpyac,
   PublishTestResults@2, variable groups).
 - `references/github-actions.md` — workflow pro GitHub Actions (setup-node, httpyac,
