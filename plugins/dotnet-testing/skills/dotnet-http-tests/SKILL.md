@@ -62,7 +62,8 @@ vypadat, jako by je psal někdo, kdo repo zná.
 3. **Navrhni adresářovou strukturu** `.http` souborů (viz níže).
 4. **Vygeneruj / uprav env soubory** — `http-client.env.json` (commitovaný) a šablonu
    `http-client.private.env.json` (gitignored).
-5. **Napiš / doplň `.http` requesty** s proměnnými a assert bloky.
+5. **Napiš / doplň `.http` requesty** s proměnnými a assert bloky (syntaxe → `SYNTAX.md`,
+   ukázkové soubory → `EXAMPLE.md`).
 6. **Vygeneruj CI konfiguraci** dle vybrané platformy (jeden nebo oba reference soubory).
 7. **Shrň bezpečnostní doporučení** (secrets, `.gitignore`) — viz závěr.
 
@@ -95,82 +96,38 @@ mu REST Client, httpyac i IntelliJ HTTP Client. Přepínání environmentu v CI 
 | **Ne-secret** (base URL, ne-citlivé ID) | `http-client.env.json` — **commitovaný** | `baseUrl` |
 | **Secret** (token, heslo, klíč) | **nikdy** natvrdo v commitovaném souboru | `token` |
 
-Secret hodnoty se řeší přes odkaz na proces env proměnnou (`$processEnv`) / `$dotenv`, ne
-zapsáním hodnoty:
-
-```jsonc
-// http-client.env.json  — COMMITOVANÝ, žádné secrety
-{
-  "local":   { "baseUrl": "https://localhost:5001", "token": "{{$processEnv API_TOKEN}}" },
-  "staging": { "baseUrl": "https://staging.example.internal", "token": "{{$processEnv API_TOKEN}}" },
-  "prod":    { "baseUrl": "https://api.example.internal", "token": "{{$processEnv API_TOKEN}}" }
-}
-```
-
-`token` zde **není** secret — je to jen odkaz „vezmi hodnotu z proces env proměnné `API_TOKEN`".
-Skutečná hodnota přijde:
+Secret hodnoty se v commitovaném `http-client.env.json` řeší jen jako **odkaz** na proces env
+proměnnou — `{{$processEnv API_TOKEN}}` (příp. `{{$dotenv API_TOKEN}}`), ne zapsáním hodnoty.
+Takový `token` **není** secret. Skutečná hodnota přijde:
 
 - **lokálně** z `http-client.private.env.json` (gitignored, přepíše hodnotu z commitovaného souboru),
 - **v CI** z pipeline secret / variable group injektované jako env proměnná `API_TOKEN`
   (viz reference dané platformy).
 
-```jsonc
-// http-client.private.env.json  — GITIGNORED, jen lokální dev, placeholdery ne reálné tokeny
-{
-  "local":   { "token": "<DEV_API_TOKEN>" },
-  "staging": { "token": "<STAGING_API_TOKEN>" }
-}
-```
+Kompletní sada obou souborů (commitovaný `http-client.env.json` + gitignored
+`http-client.private.env.json`) je v `EXAMPLE.md`.
 
 > Do commitovaných souborů nikdy nepiš reálné tokeny, hesla, PII ani interní hostnames s
 > citlivým významem — jen placeholdery (`<API_TOKEN>`, `https://api.example.internal`).
 
-## Ukázkový `.http` soubor
+## Assert bloky — ověření odpovědí
 
-Base URL a token **vždy přes proměnné** (`{{baseUrl}}`, `{{token}}`), nikdy hardcoded. Requesty
-oddělené `###`. Assert blok httpyac syntaxí `> {% client.test(...) %}`:
+Každý request, který **ověřuje CI**, musí mít assert — jinak httpyac request jen odešle a nemá
+co reportovat (v JUnit se neobjeví jako test). Čistě manuální / ad-hoc requesty assert mít nemusí.
 
-```http
-### Seznam zákazníků vrátí 200 a neprázdné pole
-GET {{baseUrl}}/api/customers
-Authorization: Bearer {{token}}
-Accept: application/json
+httpyac nabízí **dvě syntaxe** (skill akceptuje obě, lze je i míchat v jednom souboru):
 
-> {%
-  client.test("status je 200", function () {
-    client.assert(response.status === 200, "Očekáván status 200, vráceno " + response.status);
-  });
-  client.test("odpověď je neprázdné pole", function () {
-    client.assert(Array.isArray(response.parsedBody) && response.parsedBody.length > 0,
-      "Očekáváno neprázdné pole zákazníků");
-  });
-%}
+- **Deklarativní asserce `??`** — **preferováno** pro běžné kontroly stavu, těla a hlaviček
+  (`?? status == 200`, `?? body == true`). Jeden řádek na podmínku.
+- **Skriptovací blok `> {% client.test(...) %}`** — pro složitější logiku (výpočty, iterace nad
+  polem, předání hodnoty dalšímu requestu přes `client.global.set`).
 
-### Detail zákazníka vrátí 200 a správné ID
-GET {{baseUrl}}/api/customers/customer-12345
-Authorization: Bearer {{token}}
-Accept: application/json
+Base URL i token zapisuj **vždy přes proměnné** (`{{baseUrl}}`/`{{token}}` nebo
+`{{host}}`/`{{apiKey}}`), nikdy hardcoded. Requesty odděluj `###`.
 
-> {%
-  client.test("status je 200", function () {
-    client.assert(response.status === 200, "Očekáván status 200");
-  });
-  client.test("vrácené ID odpovídá požadovanému", function () {
-    client.assert(response.parsedBody.id === "customer-12345", "Nesouhlasí ID zákazníka");
-  });
-%}
-```
-
-### Assert bloky — kdy jsou povinné
-
-- **Povinné** pro každý request, který **ověřuje CI** — bez `client.test(...)` httpyac request
-  jen odešle a nemá co reportovat (v JUnit se neobjeví jako test).
-- **Nepovinné** pro čistě manuální / ad-hoc requesty, které slouží k ručnímu prozkoušení a CI
-  je nespouští.
-
-Užitečné vlastnosti v assert bloku: `response.status`, `response.headers`, `response.body`
-(text), `response.parsedBody` (JSON), `client.assert(cond, message)`, `client.global.set(k, v)`
-(předání hodnoty dalšímu requestu, např. tokenu z login požadavku).
+Podrobnou syntaxi obou variant (tabulky předmětů, operátorů a predikátů, vlastnosti skriptovacího
+bloku, kdy je assert povinný) najdeš v `SYNTAX.md`; kompletní ukázkové `.http` soubory (scénáře
+200/400/401, předání tokenu z loginu) v `EXAMPLE.md`.
 
 ## Spuštění v CI — společný příkaz
 
@@ -234,13 +191,17 @@ Před dokončením ověř:
 - [ ] Base URL i token **jen přes proměnné** (`{{baseUrl}}`, `{{token}}`), nic hardcoded?
 - [ ] `http-client.env.json` je commitovaný a **bez secretů**; secrety přes `$processEnv`/`$dotenv`?
 - [ ] `http-client.private.env.json` je v `.gitignore` a obsahuje jen placeholdery?
-- [ ] Requesty ověřované CI mají assert blok `> {% client.test(...) %}`?
+- [ ] Requesty ověřované CI mají assert — buď deklarativní `??`, nebo `> {% client.test(...) %}`?
 - [ ] CI spouští `httpyac send "<glob>" --all -e <env> --bail --junit` a publikuje JUnit?
 - [ ] Publikace výsledků běží i při selhání testů (build přesto zčervená)?
 - [ ] Vygenerována pipeline pro správnou platformu (Azure DevOps / GitHub / obojí)?
 
 ## Další soubory
 
+- `SYNTAX.md` — podrobná syntaxe assert bloků httpyac (deklarativní `??` i skriptovací
+  `> {% client.test(...) %}`, tabulky předmětů/operátorů/predikátů, kdy je assert povinný).
+- `EXAMPLE.md` — kompletní ukázkové `.http` soubory a environment sada (`http-client.env.json`
+  + `http-client.private.env.json`, scénáře 200/400/401, předání tokenu z loginu).
 - `references/azure-devops.md` — YAML pipeline pro Azure DevOps (NodeTool, httpyac,
   PublishTestResults@2, variable groups).
 - `references/github-actions.md` — workflow pro GitHub Actions (setup-node, httpyac,
