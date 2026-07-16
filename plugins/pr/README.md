@@ -17,8 +17,6 @@ Skill analyzuje změny na větvi, vyplní šablonu PR a vytvoří pull request p
 - Verze (volitelně, pokud projekt verzuje)
 - Popis změn, typ změny, dopady a testování
 
-Referenční příklady vyplněné šablony jsou v `skills/pr/EXAMPLE.md`.
-
 ## Instalace
 
 ```

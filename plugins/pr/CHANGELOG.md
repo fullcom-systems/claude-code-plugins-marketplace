@@ -13,9 +13,12 @@ a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 - Odkaz na ticket používá placeholder `<issue-tracker-url>` (Jira / YouTrack / GitHub Issues / Azure Boards)
 - Verze v šabloně je volitelná; zdroj verze zobecněn (`package.json`, `*.csproj`, `pyproject.toml`, git tag…)
 - Položky dopadů a testování zobecněny (závislosti, konfigurace, integrační / API test)
-- Příklady v `EXAMPLE.md` přepsány na doménově neutrální
 - Skill `pr` detekuje výchozí větev (`main`/`master`) místo napevno zadaného `master`
 - Postup vytvoření PR doplněn o push větve a kontrolu, zda PR pro větev už neexistuje
+
+### Removed
+
+- Soubor `EXAMPLE.md` — prázdná šablona a pravidla v `SKILL.md` postačují, vyplněné příklady duplikovaly strukturu šablony
 
 ## [1.0.0] - 2026-06-16
 

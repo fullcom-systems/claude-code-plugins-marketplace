@@ -150,7 +150,3 @@ Označ způsoby testování a přidej krátký popis nebo odkaz na ticket.
 - [ ] Správný typ změny označen?
 - [ ] Všechny dopady označeny?
 - [ ] Způsob testování uveden?
-
-## Příklad
-
-Kompletní příklad vyplněné šablony najdeš v souboru `EXAMPLE.md` ve stejném adresáři jako tento skill.
