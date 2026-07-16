@@ -37,11 +37,22 @@ Tento skill vytváří pull requesty podle strukturované šablony (ticket, popi
    - Jsou migrace databáze?
    - Změnila se konfigurace?
 
-4. **Vyplň šablonu PR** podle pravidel níže
+4. **Zjisti, zda projekt má vlastní PR šablonu** — projektová šablona má **přednost** před vestavěnou:
+   ```bash
+   TEMPLATE=$(find .github docs . -maxdepth 1 -iname 'pull_request_template.md' 2>/dev/null | head -1)
+   [ -n "$TEMPLATE" ] && echo "Nalezena šablona: $TEMPLATE" && cat "$TEMPLATE"
+   ```
+   - **Nalezena** → načti její obsah, pochop její pole a vyplň je dle analýzy změn; její strukturu neměň
+   - **Nenalezena** → použij vestavěnou šablonu ze sekce „Formát PR" níže
+   - Více šablon (`.github/PULL_REQUEST_TEMPLATE/*.md`) → vyber tu, která odpovídá typu změny
 
-5. **Pushni větev a vytvoř PR pomocí gh CLI** (viz sekce Vytvoření PR)
+5. **Vyplň šablonu PR** (projektovou z kroku 4, jinak vestavěnou dle pravidel níže)
+
+6. **Pushni větev a vytvoř PR pomocí gh CLI** (viz sekce Vytvoření PR)
 
 ## Formát PR
+
+> Vestavěná šablona — použij **jen** pokud projekt nemá vlastní PR šablonu (krok 4). Pokud existuje projektová, řiď se jejími poli.
 
 ```markdown
 **[TICKET](<issue-tracker-url>/TICKET)**
@@ -80,6 +91,8 @@ Krátký popis jak testovat nebo odkaz na ticket.
 ```
 
 ## Pravidla pro vyplnění
+
+Platí pro vestavěnou šablonu; u projektové šablony je aplikuj na odpovídající pole (ticket, popis, verze…) a respektuj její strukturu.
 
 ### Ticket a odkaz
 
@@ -144,6 +157,7 @@ Označ způsoby testování a přidej krátký popis nebo odkaz na ticket.
 
 ## Kontrolní seznam
 
+- [ ] Zkontrolována existence projektové PR šablony?
 - [ ] Ticket extrahován z větve?
 - [ ] Verze uvedena (pokud projekt verzuje)?
 - [ ] Popis změn stručný a přesný?

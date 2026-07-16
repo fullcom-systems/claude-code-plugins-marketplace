@@ -7,6 +7,10 @@ a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
 ## [1.2.0] - 2026-07-15
 
+### Added
+
+- Skill nejprve hledá projektovou PR šablonu (`pull_request_template.md` v `.github/`, `docs/` nebo rootu, case-insensitive); pokud existuje, má přednost před vestavěnou šablonou
+
 ### Changed
 
 - Skill `pr` je nyní obecně platný — odstraněny vazby na NextFIS a konkrétní stack (YouTrack URL, `appsettings`/`web.config`, NuGet, formát verze `YY.MM.build.revision`)
