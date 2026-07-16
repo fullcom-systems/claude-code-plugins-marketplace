@@ -30,7 +30,7 @@
     {
       "name": "pr",
       "source": "./plugins/pr",
-      "description": "Pull Request Generator — vytváří pull requesty podle šablony NextFIS (ticket z větve, popis změn, dopady, testování)."
+      "description": "Pull Request Generator — vytváří pull requesty podle strukturované šablony (ticket z větve, popis změn, dopady, testování)."
     },
     {
       "name": "pps-workflow",

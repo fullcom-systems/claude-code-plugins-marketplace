@@ -1,6 +1,6 @@
 # pr
 
-Pull Request Generator — Claude Code skill pro vytváření pull requestů podle šablony projektu NextFIS.
+Pull Request Generator — Claude Code skill pro vytváření pull requestů podle strukturované šablony.
 
 ## Skill: `/pr`
 
@@ -9,12 +9,12 @@ Skill analyzuje změny na větvi, vyplní šablonu PR a vytvoří pull request p
 | Vstup | Popis |
 |-------|-------|
 | Popis změn | Ruční popis nebo analýza z git diff |
-| Ticket / větev | Ticket se extrahuje z názvu větve (např. `INO-153`, `RF-456`) |
+| Ticket / větev | Ticket se extrahuje z názvu větve (např. `PROJ-153`, `ABC-456`) |
 
 ## Šablona PR
 
-- Odkaz na YouTrack ticket
-- Verze ve formátu `YY.MM.build.revision`
+- Odkaz na ticket v issue trackeru projektu
+- Verze (volitelně, pokud projekt verzuje)
 - Popis změn, typ změny, dopady a testování
 
 Referenční příklady vyplněné šablony jsou v `skills/pr/EXAMPLE.md`.
@@ -29,15 +29,10 @@ Referenční příklady vyplněné šablony jsou v `skills/pr/EXAMPLE.md`.
 
 ```
 /pr
-/pr INO-153
+/pr PROJ-153
 /pr vytvoř pull request pro opravu validace
 ```
 
 ## Changelog
 
-### 1.0.0
-
-- Počáteční vydání skilu pr
-- Šablona PR podle konvencí NextFIS
-- Extrakce ticketu z názvu větve
-- Vytvoření PR přes gh CLI
+Viz [CHANGELOG.md](CHANGELOG.md).

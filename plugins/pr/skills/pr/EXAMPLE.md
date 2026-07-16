@@ -1,15 +1,17 @@
 # Příklad vyplněné PR šablony
 
+> `<issue-tracker-url>` nahraď základní URL issue trackeru projektu (Jira, YouTrack, GitHub Issues, Azure Boards…). Řádek `Verze:` uveď jen, pokud projekt verzuje release.
+
 ## Příklad 1: Nová funkce
 
 ```markdown
-**[EXP-354](https://youtrack.fullsys.cz/issue/EXP-354)**
+**[PROJ-354](<issue-tracker-url>/PROJ-354)**
 
-Verze: **26.01.1.10**
+Verze: **1.4.0**
 
 ## Popis změn
-- nyní na terminálu nelze zpracovávat stornovanou paletu
-- přidána kontrola zrušeného binu
+- přidán export sestavy do formátu CSV
+- doplněna volba oddělovače v dialogu exportu
 
 ## Typ změny
 
@@ -22,32 +24,32 @@ Verze: **26.01.1.10**
 
 - [ ] Breaking changes (rozbije zpětnou kompatibilitu)
 - [ ] Migrace databáze
-- [ ] Změny konfigurace (appsettings.json, web.config)
+- [ ] Změny konfigurace
 - [ ] Změna API rozhraní
-- [ ] Přidává nové NuGet balíčky
-- [ ] Změnu dokumentace
+- [ ] Přidává nové závislosti
+- [ ] Změna dokumentace
 
 ## Testování
 
-- [ ] Manuální test ve WEB UI
-- [x] Manuální test v terminálu
+- [x] Manuální test v UI
+- [ ] Manuální test v terminálu
 - [ ] Unit test
-- [ ] HTTP testy
+- [ ] Integrační / API test
 
 ### Popis testu
-Test popsaný v EXP-354
+Test popsaný v PROJ-354
 ```
 
 ## Příklad 2: Bugfix s migrací
 
 ```markdown
-**[INO-228](https://youtrack.fullsys.cz/issue/INO-228)**
+**[ABC-228](<issue-tracker-url>/ABC-228)**
 
-Verze: **26.01.1.8**
+Verze: **1.3.2**
 
 ## Popis změn
-- opravena chyba při příjmu palet z externího skladu
-- upravena validace v úloze Obecný příjem zboží a materiálu
+- opravena chyba při ukládání duplicitního záznamu
+- upravena validace formuláře registrace
 
 ## Typ změny
 
@@ -60,34 +62,34 @@ Verze: **26.01.1.8**
 
 - [ ] Breaking changes (rozbije zpětnou kompatibilitu)
 - [x] Migrace databáze
-- [ ] Změny konfigurace (appsettings.json, web.config)
+- [ ] Změny konfigurace
 - [ ] Změna API rozhraní
-- [ ] Přidává nové NuGet balíčky
-- [ ] Změnu dokumentace
+- [ ] Přidává nové závislosti
+- [ ] Změna dokumentace
 
 ## Testování
 
-- [ ] Manuální test ve WEB UI
-- [x] Manuální test v terminálu
+- [x] Manuální test v UI
+- [ ] Manuální test v terminálu
 - [x] Unit test
-- [ ] HTTP testy
+- [ ] Integrační / API test
 
 ### Popis testu
-1. Vytvořit paletu v externím skladu
-2. Provést příjem do hlavního skladu
-3. Ověřit správné přiřazení binu
+1. Vytvořit záznam s existujícím klíčem
+2. Ověřit korektní chybové hlášení místo pádu
+3. Ověřit aplikaci migrace na čisté databázi
 ```
 
 ## Příklad 3: Refaktoring
 
 ```markdown
-**[INO-153](https://youtrack.fullsys.cz/issue/INO-153)**
+**[XY-153](<issue-tracker-url>/XY-153)**
 
-Verze: **26.01.1.5**
+Verze: **2.0.0**
 
 ## Popis změn
-- implementován FEFO alokátor šarží
-- refaktoring fáze 1b dokončen
+- rozdělena monolitická service na menší komponenty
+- sjednoceno chybové zpracování napříč vrstvou API
 
 ## Typ změny
 
@@ -100,20 +102,20 @@ Verze: **26.01.1.5**
 
 - [ ] Breaking changes (rozbije zpětnou kompatibilitu)
 - [ ] Migrace databáze
-- [ ] Změny konfigurace (appsettings.json, web.config)
+- [ ] Změny konfigurace
 - [x] Změna API rozhraní
-- [ ] Přidává nové NuGet balíčky
-- [ ] Změnu dokumentace
+- [ ] Přidává nové závislosti
+- [ ] Změna dokumentace
 
 ## Testování
 
-- [x] Manuální test ve WEB UI
-- [x] Manuální test v terminálu
+- [x] Manuální test v UI
+- [ ] Manuální test v terminálu
 - [x] Unit test
-- [x] HTTP testy
+- [x] Integrační / API test
 
 ### Popis testu
-Kompletní regresní testy alokace šarží dle testovacího scénáře v INO-153
+Kompletní regresní testy dle testovacího scénáře v XY-153
 ```
 
 ## Příklad 4: Změna bez ticketu
@@ -121,10 +123,8 @@ Kompletní regresní testy alokace šarží dle testovacího scénáře v INO-15
 ```markdown
 **Aktualizace dokumentace**
 
-Verze: **26.01.1.1**
-
 ## Popis změn
-- aktualizován CHANGELOG pro verzi 26.01
+- aktualizován CHANGELOG pro poslední release
 - přidána dokumentace nových API endpointů
 
 ## Typ změny
@@ -140,17 +140,17 @@ Dokumentace
 
 - [ ] Breaking changes (rozbije zpětnou kompatibilitu)
 - [ ] Migrace databáze
-- [ ] Změny konfigurace (appsettings.json, web.config)
+- [ ] Změny konfigurace
 - [ ] Změna API rozhraní
-- [ ] Přidává nové NuGet balíčky
-- [x] Změnu dokumentace
+- [ ] Přidává nové závislosti
+- [x] Změna dokumentace
 
 ## Testování
 
-- [ ] Manuální test ve WEB UI
+- [ ] Manuální test v UI
 - [ ] Manuální test v terminálu
 - [ ] Unit test
-- [ ] HTTP testy
+- [ ] Integrační / API test
 
 ### Popis testu
 Není třeba - pouze dokumentace
