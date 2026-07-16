@@ -24,6 +24,10 @@ a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
 - Soubor `EXAMPLE.md` — prázdná šablona a pravidla v `SKILL.md` postačují, vyplněné příklady duplikovaly strukturu šablony
 
+### Fixed
+
+- `argument-hint` opraven na platný YAML string (`"[ticket-nebo-popis]"`) — dříve byl bez uvozovek interpretován jako pole
+
 ## [1.0.0] - 2026-06-16
 
 ### Added

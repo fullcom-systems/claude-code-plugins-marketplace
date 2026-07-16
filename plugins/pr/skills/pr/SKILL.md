@@ -6,7 +6,7 @@ description: >-
   větve a extrahuješ ticket z názvu větve. Nepoužívej pro review kódu ani merge
   bez vytvoření PR.
 user-invocable: true
-argument-hint: [ticket nebo stručný popis změn]
+argument-hint: "[ticket-nebo-popis]"
 ---
 
 # Pull Request Generator
