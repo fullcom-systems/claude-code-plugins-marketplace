@@ -22,6 +22,7 @@ Meta-shrnutí: Tento skill řídí tvorbu a údržbu celého dokumentačního ek
 - [Workflow: reorganizace dokumentace](#workflow-reorganizace-dokumentace)
 - [Workflow: architekturní rozhodnutí (ADR)](#workflow-architekturní-rozhodnutí-adr)
 - [Kam co patří (rozhodovací tabulka)](#kam-co-patří-rozhodovací-tabulka)
+- [Nezávislá kontrola agentem](#nezávislá-kontrola-agentem)
 - [Kontrolní checklist před odevzdáním](#kontrolní-checklist-před-odevzdáním)
 - [Referenční soubory a šablony](#referenční-soubory-a-šablony)
 
@@ -57,7 +58,7 @@ Postupuj v tomto pořadí. Každý krok navazuje na předchozí, takže ho nepř
 3. **Postav kostru.** H1 nadpis → meta-shrnutí (1–3 věty) → obsah/ToC (u delších dokumentů) → tělo členěné `##` a `###`. Pro běžný dokument použij [`assets/dokument-template.md`](./assets/dokument-template.md), pro README/CONTRIBUTING/CHANGELOG odpovídající šablonu z [`assets/`](#referenční-soubory-a-šablony).
 4. **Napiš obsah.** Drž se zvoleného tónu. Kód do bloků se zvýrazněním syntaxe, klíčové výjimky a varování do alert blockquotes, srovnání a parametry do tabulek, procesy a architekturu do Mermaid diagramů.
 5. **Zapoj dokument do rozcestníků.** Nový soubor není hotový, dokud na něj nevede odkaz. Přidej relativní odkaz do `README.md` dané složky (a případně do kořenového `README.md`), aby dokument nebyl osiřelý.
-6. **Projdi [checklist](#kontrolní-checklist-před-odevzdáním).**
+6. **Zkontroluj výsledek.** U netriviálního nebo vícesouborového výstupu deleguj nezávislou kontrolu na agenta `docs-reviewer` (viz [Nezávislá kontrola agentem](#nezávislá-kontrola-agentem)) a jeho nálezy zapracuj. U drobné úpravy stačí projít [checklist](#kontrolní-checklist-před-odevzdáním) ručně.
 
 ## Workflow: aktualizace existujícího dokumentu
 
@@ -68,6 +69,7 @@ Při úpravách je hlavní riziko, že rozbiješ to, co už funguje – odkazy a
 3. **Aktualizuj rozcestník na začátku.** Když přidáváš novou `##` sekci, přidej ji i do ToC. Tohle se nejčastěji zapomíná – ToC, který neodpovídá tělu, je horší než žádný.
 4. **Zkontroluj relativní odkazy.** Ověř, že jsi nepřejmenoval kotvy/nadpisy, na které někdo odkazuje, a že odkazy, které přidáváš, vedou na existující soubory.
 5. **Pokud dokument nemá meta-shrnutí nebo H1**, doplň je – využij příležitost dotáhnout ho ke standardu.
+6. **U větší úpravy nech výsledek zkontrolovat** agentem `docs-reviewer` – ověří odkazy, ToC a placeholdery nezávisle (viz [Nezávislá kontrola agentem](#nezávislá-kontrola-agentem)).
 
 ## Workflow: reorganizace dokumentace
 
@@ -108,9 +110,20 @@ Architekturní rozhodnutí (volba technologie, integračního vzoru, obtížně 
 > [!NOTE]
 > Vývojářská dokumentace (`docs/development/`) je záměrně izolovaná od AI/agentích instrukcí – nemíchej do ní obsah typu „prompt pro Claude". Plnou závaznou strukturu a její odůvodnění najdeš v [`references/struktura-repozitare.md`](./references/struktura-repozitare.md).
 
+## Nezávislá kontrola agentem
+
+Pro netriviální výstupy máš k dispozici agenta **`docs-reviewer`** – nezávislého recenzenta, který dokument(y) zkontroluje v izolovaném kontextu proti stejným pravidlům (tři pilíře, struktura, tón, relativní odkazy, placeholdery místo PII) a vrátí report s nálezy podle závažnosti. Sám **nic neopravuje** – opravy provedeš ty na základě jeho reportu.
+
+Používej ho uvážlivě, ať se vyplatí režie samostatného agenta:
+
+- **Deleguj na `docs-reviewer`** u vícesouborového výstupu, reorganizace, nového README od nuly, ADR nebo kdykoli si uživatel vyžádá revizi. Nezávislý pohled chytí rozbité odkazy, nesoulad ToC s tělem a přehlédnuté PII spolehlivěji než vlastní kontrola.
+- **Nedeleguj** u drobné úpravy jednoho souboru (např. doplnění odstavce) – tam stačí projít [checklist](#kontrolní-checklist-před-odevzdáním) ručně; spouštět kvůli tomu agenta je zbytečná režie.
+
+Agenta zavoláš přes Agent/Task tool jménem `docs-reviewer`. V zadání mu předej **cesty k revidovaným dokumentům**, **kořen repozitáře** (pro ověření odkazů a rozcestníků) a případně **cílovou složku/skupinu**. Jeho nálezy pak zapracuj a teprve poté dokument odevzdej.
+
 ## Kontrolní checklist před odevzdáním
 
-Projdi tohle u každého dokumentu, který vytvoříš nebo upravíš. Slouží jako poslední síto – pár vteřin tady ušetří zmatek čtenáři.
+Projdi tohle u každého dokumentu, který vytvoříš nebo upravíš. Slouží jako poslední síto – pár vteřin tady ušetří zmatek čtenáři. (Je to zároveň matice, proti které kontroluje agent [`docs-reviewer`](#nezávislá-kontrola-agentem).)
 
 - [ ] Dokument začíná `# H1` nadpisem.
 - [ ] Hned pod H1 je meta-shrnutí (1–3 věty: účel + cílová skupina).

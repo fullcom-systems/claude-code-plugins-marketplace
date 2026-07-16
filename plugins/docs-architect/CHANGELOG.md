@@ -5,6 +5,13 @@ Všechny významné změny v tomto projektu budou dokumentovány v tomto souboru
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)
 a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
+## [1.2.0] - 2026-07-16
+
+### Added
+
+- Subagent `docs-reviewer` (`agents/docs-reviewer.md`) – nezávislý read-only recenzent, který dokumentaci zkontroluje v izolovaném kontextu proti pravidlům skillu (tři pilíře, struktura, tón, relativní odkazy, placeholdery místo PII) a vrátí report s nálezy dle závažnosti (BLOCKER / WARNING / NIT). Sám neopravuje.
+- Sekce „Nezávislá kontrola agentem" v `SKILL.md` a zapojení `docs-reviewer` do workflow tvorby i aktualizace dokumentu (deleguj u netriviálních/vícesouborových výstupů, u drobných úprav stačí ruční checklist).
+
 ## [1.1.2] - 2026-07-14
 
 ### Fixed
