@@ -1,11 +1,11 @@
 {
   "name": "pr",
-  "description": "Pull Request Generator — vytváří pull requesty podle šablony NextFIS (ticket z větve, popis změn, dopady, testování). Skill pro vyplnění šablony PR a vytvoření PR přes gh CLI.",
-  "version": "1.0.0",
+  "description": "Pull Request Generator — vytváří pull requesty podle strukturované šablony (ticket z větve, popis změn, dopady, testování). Skill pro vyplnění šablony PR a vytvoření PR přes gh CLI.",
+  "version": "1.2.0",
   "author": {
     "name": "Fullsys",
     "email": "ladislav.filip@fullsys.cz"
   },
   "license": "MIT",
-  "keywords": ["pull-request", "pr", "github", "nextfis", "youtrack"]
+  "keywords": ["pull-request", "pr", "github", "git", "issue-tracker"]
 }
