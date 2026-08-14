@@ -9,7 +9,7 @@ a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
 ### Fixed
 
-- `commit-pps`: zpřesněn krok vytváření větve z `dev-sprint` — vždy jen prefix `feature/` (i pro `fix:` commity), ošetřen případ kdy uživatel do zadání sám napíše prefix, a přidáno ověření výsledné větve před commitem
+- `commit-pps`: zpřesněn krok vytváření větve z `dev-sprint` — vždy jen prefix `feature/` (i pro `fix:` commity), ošetřen případ, kdy uživatel do zadání sám napíše prefix, a přidáno ověření výsledné větve před commitem
 
 ## [1.1.0] - 2026-08-14
 
