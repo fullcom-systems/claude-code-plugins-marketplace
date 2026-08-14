@@ -1,6 +1,8 @@
 ---
 name: commit-pps
 description: Vytvoř standardizovaný semantic git commit podle Conventional Commits specifikace. Analyzuje aktuální diff a určí vhodný type, scope a popis; volitelně s argumentem `push` po commitu provede i `git push`. Použij vždy, když uživatel chce udělat commit, "zacommitovat", "zacommitnout" nebo požádá o commit message.
+model: sonnet
+effort: low
 ---
 
 # commit-pps — Conventional Commits
@@ -57,11 +59,12 @@ Zkontroluj aktuální větev (`git branch --show-current`).
 
 Pokud je aktuální větev `dev-sprint`:
 - Vyzvi uživatele: "Jsi na dev-sprint. Zadej číslo úkolu a název větve."
-- Číslo úkolu a název složí dohromady: `<číslo-úkolu>-<název>`
+- Ze zadání slož `<číslo-úkolu>-<název>`. Pokud uživatel do odpovědi sám napsal prefix (`feature/`, `fix/` apod.), tento prefix odstraň — použije se vždy jen `feature/` níže, bez ohledu na typ chystaného commitu (i pro `fix:`).
 - Mezery v názvu nahraď pomocí `-`
-- Vytvoř větev: `git checkout -b feature/<číslo-úkolu>-<název>`
+- **Vždy vytvoř větev s prefixem `feature/`**: `git checkout -b feature/<číslo-úkolu>-<název>`
+- Ověř výsledek (`git branch --show-current`) — musí začínat `feature/`. Pokud ne, přejmenuj (`git branch -m feature/<číslo-úkolu>-<název>`) než budeš pokračovat ke commitu.
 
-Pokud je aktuální větev jiná než `dev-sprint` → pokračuj bez změny.
+Pokud je aktuální větev jiná než `dev-sprint` → pokračuj bez změny (vytváření větve řeší pouze případ `dev-sprint`).
 
 ### 2. Analyzuj diff
 

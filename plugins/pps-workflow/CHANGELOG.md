@@ -5,6 +5,18 @@ Všechny významné změny v tomto projektu budou dokumentovány v tomto souboru
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)
 a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
+## [1.1.1] - 2026-08-14
+
+### Fixed
+
+- `commit-pps`: zpřesněn krok vytváření větve z `dev-sprint` — vždy jen prefix `feature/` (i pro `fix:` commity), ošetřen případ kdy uživatel do zadání sám napíše prefix, a přidáno ověření výsledné větve před commitem
+
+## [1.1.0] - 2026-08-14
+
+### Added
+
+- Frontmatter `model`/`effort` u všech tří skillů — omezuje zbytečnou latenci a spotřebu tokenů dle náročnosti úkolu: `commit-pps` (sonnet, low), `pr-pps` (sonnet, medium), `pr-fix-pps` (opus, high — jediný skill rozhodující o sémantice kódu při auto-fixu Sonar findings)
+
 ## [1.0.0] - 2026-06-22
 
 ### Added

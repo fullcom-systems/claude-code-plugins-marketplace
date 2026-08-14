@@ -2,6 +2,8 @@
 name: pr-fix-pps
 description: Načte komentáře z existujícího pull requestu v Azure DevOps (PPS), automaticky opraví SonarQube findings, vypíše reviewer komentáře k potvrzení, vytvoří commit a pushne. Použij vždy, když uživatel chce zapracovat připomínky z PR, opravit Sonar findings nebo "zareagovat na komentáře v PR".
 disable-model-invocation: true
+model: opus
+effort: high
 ---
 
 # Skill: /pr-fix-pps

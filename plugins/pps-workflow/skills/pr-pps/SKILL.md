@@ -2,6 +2,8 @@
 name: pr-pps
 description: Vytvoří pull request v Azure DevOps pro projekt Planning/PPS — zkontroluje stav větve, sestaví PR zprávu ze všech commitů oproti dev-sprint, vytvoří PR přes Azure CLI a vrátí odkaz. Použij vždy, když uživatel chce vytvořit pull request, PR, nebo mergovat větev do dev-sprint.
 disable-model-invocation: true
+model: sonnet
+effort: medium
 ---
 
 # Skill: /pr-pps
