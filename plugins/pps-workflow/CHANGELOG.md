@@ -5,6 +5,18 @@ Všechny významné změny v tomto projektu budou dokumentovány v tomto souboru
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)
 a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
+## [1.1.2] - 2026-08-17
+
+### Fixed
+
+- `pr-pps`: krok 6 vytahuje `pullRequestId` přes `az --query pullRequestId -o tsv` místo `echo "$RESPONSE" | jq`. V zsh (výchozí shell na macOS) `echo` interpretuje escape sekvence, takže validní JSON od `az` rozbilo na neplatný — `"dmz\\DZCX78F"` na `"dmz\DZCX78F"` a `\n` v popisu PR na reálné zalomení řádku — a `jq` skončil s `Invalid escape`. Skill pak uživatele posílal vytvořit PR ručně, přestože PR reálně vznikl
+
+### Changed
+
+- `pr-pps`: nová sekce „Čtení výstupu `az`" — nepoužívat `echo` na JSON (alternativy `--query`, přesměrování do souboru, `printf`), nemergovat stderr do stdout přes `2>&1` kvůli hlášce `WARNING: ... does not support Azure DevOps Server`
+- `pr-pps`: URL pull requestu se skládá přímo z `PR_ID` — on-premise Azure DevOps Server pole `_links` v odpovědi nevrací, takže dřívější primární varianta `_links.web.href` nikdy neuspěla
+- `pr-pps`: chybová obsluha doplněna o ověření existujících PR na větvi (`az repos pr list --query ...`), aby po nejasné chybě nevznikl duplicitní PR
+
 ## [1.1.1] - 2026-08-14
 
 ### Fixed

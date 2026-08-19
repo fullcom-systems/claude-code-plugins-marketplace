@@ -207,8 +207,10 @@ Popis PR **předávej přes soubor (`@file`), ne přes argumenty.** Na **Windows
 
 3. Vytvoř PR a popis předej přes `@<cesta>`:
 
+**ID nového PR nech vytáhnout `az` samotné přes `--query`** — neparsuj jeho výstup v shellu (proč viz [Čtení výstupu `az`](#čtení-výstupu-az) níže):
+
 ```bash
-RESPONSE=$(PYTHONUTF8=1 PYTHONIOENCODING=utf-8 az repos pr create \
+PR_ID=$(PYTHONUTF8=1 PYTHONIOENCODING=utf-8 az repos pr create \
   --organization "<org-url>" \
   --project "<project>" \
   --repository "<repo>" \
@@ -217,24 +219,27 @@ RESPONSE=$(PYTHONUTF8=1 PYTHONIOENCODING=utf-8 az repos pr create \
   --title "<PR title v ASCII>" \
   --description @"<cesta-k-souboru>" \
   --detect false \
-  --output json)
+  --query pullRequestId -o tsv)
 ```
 
 `--description @soubor` načte celý obsah souboru jako jeden multi-line popis (zalomení řádků zůstanou zachována) — tím se úplně obejde předávání textu v argumentech a diakritika zůstane v pořádku. (`@file` je standardní konvence Azure CLI pro načtení hodnoty parametru ze souboru.)
 
-Z výstupu (JSON) vyber:
-- `pullRequestId` → `PR_ID`
-- `_links.web.href` → `PR_URL`
-
-Pokud `_links.web.href` chybí, fallback URL sestav jako `<web-base>/pullrequest/<PR_ID>`.
+URL slož z `PR_ID` — **`_links` tenhle on-premise server ve své odpovědi vůbec nevrací**, takže na `_links.web.href` se nespoléhej:
 
 ```bash
-PR_ID=$(echo "$RESPONSE" | jq -r '.pullRequestId')
-PR_URL=$(echo "$RESPONSE" | jq -r '._links.web.href // empty')
-[ -z "$PR_URL" ] && PR_URL="<web-base>/pullrequest/$PR_ID"
+PR_URL="<web-base>/pullrequest/$PR_ID"
 ```
 
+Pokud je `PR_ID` prázdné, PR se nevytvořil — postupuj podle sekce [Chybová obsluha](#chybová-obsluha).
+
 (Volitelně po dokončení dočasný soubor smaž.)
+
+### Čtení výstupu `az`
+
+- **Nikdy `echo "$JSON" | jq`.** V **zsh** (výchozí shell na macOS) `echo` interpretuje escape sekvence, takže z korektního `"dmz\\DZCX78F"` udělá `"dmz\DZCX78F"` a z `\n` v popisu PR reálné zalomení řádku — obojí je neplatný JSON a `jq` i `python json.loads` na něm spadnou (`Invalid escape`). Výstup `az` je přitom validní; rozbije ho až `echo`. Na Azure DevOps Server to potká každé PR, protože identity mají `uniqueName` ve tvaru `DOMAIN\username`.
+- **Preferuj `--query <pole> -o tsv`** — hodnotu vybere `az` sám a do shellu přijde čistý skalár. Žádné parsování, o jedno volání méně.
+- **Když potřebuješ víc polí,** přesměruj odpověď do souboru (`az ... -o json > "${TMPDIR:-/tmp}/resp.json"`) a čti ji odtud, nebo použij `printf '%s' "$JSON" | jq` — `printf` escape sekvence neinterpretuje.
+- **Nikdy nepřidávej `2>&1`.** Proti Azure DevOps Server `az` na **stderr** hlásí `WARNING: The Azure DevOps Extension for the Azure CLI does not support Azure DevOps Server.` To je jen varování (API funguje normálně), ale sloučením do stdout si znečistíš výstup a rozbiješ i `--query`/`-o tsv`.
 
 ### Kódování / Windows (proč `@file` a ASCII title)
 
@@ -249,6 +254,12 @@ PR_URL=$(echo "$RESPONSE" | jq -r '._links.web.href // empty')
 - **HTTP 401 / `TF400813` / `TF401019`** → PAT expiroval nebo nemá scope. Informuj uživatele:
   > "Azure CLI vrátilo 401 — PAT pravděpodobně expiroval nebo nemá scope Code (Read & Write). Vygeneruj nový v Azure DevOps → User Settings → Personal Access Tokens a aktualizuj hodnotu `AZURE_DEVOPS_EXT_PAT` v `~/.claude/settings.json`. Pak restartuj CC."
 - **`TF401179` (PR už existuje)** → vypiš zprávu a nabídni odkaz na existující PR.
+- **Nejasné, jestli operace prošla** → **nikdy nevytvářej PR podruhé naslepo.** Nejdřív ověř, co na větvi existuje, ať nevznikne duplikát:
+  ```bash
+  az repos pr list --organization "<org-url>" --project "<project>" --repository "<repo>" \
+    --source-branch "$(git branch --show-current)" --detect false \
+    --query "[].{id:pullRequestId, status:status}" -o tsv
+  ```
 - **Ostatní chyby** → vypiš stderr `az` a sděl uživateli, ať PR vytvoří ručně v Azure DevOps. Vypiš mu připravenou PR zprávu (title + body z kroku 4), ať ji může jen zkopírovat.
 
 ## 7. Informuj uživatele
