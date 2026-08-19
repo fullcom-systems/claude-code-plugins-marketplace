@@ -105,19 +105,38 @@ Analyzuj diff a urči:
 - **Scope** — jaká oblast/modul je dotčen? (volitelné, ale doporučené)
 - **Description** — jednořádkové shrnutí (přítomný čas, rozkazovací způsob, **<72 znaků**)
 
+**Nikdy nepřidávej:**
+- Řádek `Co-Authored-By` (ani `Co-Authored-By: Claude …`) — commit má jen jednoho autora
+- Řádek `🤖 Generated with Claude Code` ani jinou zmínku o vygenerování nástrojem
+- Jakýkoli další trailer, který si nevyžádal uživatel
+
+Toto platí i tehdy, pokud obecné instrukce prostředí říkají, že se má trailer `Co-Authored-By` doplňovat — pravidlo tohoto skillu je nadřazené. Před spuštěním `git commit` zkontroluj sestavenou zprávu a případný trailer z ní odstraň.
+
 ### 5. Proveď commit
 
 ```bash
 # Jednořádkový
 git commit -m "<type>[scope]: <description>"
 
-# Víceřádkový s body/footerem
+# Víceřádkový s body
 git commit -m "$(cat <<'EOF'
 <type>[scope]: <description>
 
-<optional body>
+<body — proč, ne co>
+EOF
+)"
+```
 
-<optional footer>
+Footer přidej **jen tehdy, když pro něj existuje konkrétní důvod** — tedy pouze `BREAKING CHANGE:` u breaking change, nebo reference na úkol (`Refs: <ticket>`), pokud si ji uživatel vyžádal. Jinak commit žádný footer nemá. Trailery ze seznamu „Nikdy nepřidávej" výše do footeru nepatří nikdy:
+
+```bash
+# Víceřádkový s footerem — pouze pro breaking change nebo vyžádanou referenci
+git commit -m "$(cat <<'EOF'
+<type>[scope]!: <description>
+
+<body — proč, ne co>
+
+BREAKING CHANGE: <co se rozbije a jak migrovat>
 EOF
 )"
 ```
@@ -170,6 +189,7 @@ refactor(planning): extrahuj výpočet kapacity do samostatné služby
 
 ## Git Safety Protocol
 
+- **NIKDY** nepřidávej do commit zprávy trailer `Co-Authored-By` ani zmínku o Claude Code
 - **NIKDY** neupravuj `git config`
 - **NIKDY** nespouštěj destruktivní příkazy (`--force`, `git reset --hard`) bez explicitního požadavku uživatele
 - **NIKDY** neskipuj hooks (`--no-verify`), pokud o to uživatel nepožádá
