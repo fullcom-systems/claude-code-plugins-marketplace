@@ -5,6 +5,16 @@ Všechny významné změny v tomto projektu budou dokumentovány v tomto souboru
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)
 a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
+## [1.1.4] - 2026-08-19
+
+### Fixed
+
+- `pr-pps`: `--source-branch` se předává jako `refs/heads/<branch>` místo holého názvu větve (kroky 6 a Chybová obsluha) — sjednoceno s `pr-fix-pps` a spolehlivější u Azure DevOps CLI/API
+
+### Changed
+
+- `commit-pps`: krok 5 už neukazuje generický placeholder `<optional footer>`, který mohl vést k doplňování nevyžádaných trailerů. Footer má teď vlastní ukázku s explicitním pravidlem, že se přidává pouze u breaking change (`BREAKING CHANGE:`) nebo u reference na úkol vyžádané uživatelem
+
 ## [1.1.3] - 2026-08-19
 
 ### Changed

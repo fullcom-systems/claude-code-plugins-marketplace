@@ -118,13 +118,25 @@ Toto platí i tehdy, pokud obecné instrukce prostředí říkají, že se má t
 # Jednořádkový
 git commit -m "<type>[scope]: <description>"
 
-# Víceřádkový s body/footerem
+# Víceřádkový s body
 git commit -m "$(cat <<'EOF'
 <type>[scope]: <description>
 
-<optional body>
+<body — proč, ne co>
+EOF
+)"
+```
 
-<optional footer>
+Footer přidej **jen tehdy, když pro něj existuje konkrétní důvod** — tedy pouze `BREAKING CHANGE:` u breaking change, nebo reference na úkol (`Refs: <ticket>`), pokud si ji uživatel vyžádal. Jinak commit žádný footer nemá. Trailery ze seznamu „Nikdy nepřidávej" výše do footeru nepatří nikdy:
+
+```bash
+# Víceřádkový s footerem — pouze pro breaking change nebo vyžádanou referenci
+git commit -m "$(cat <<'EOF'
+<type>[scope]!: <description>
+
+<body — proč, ne co>
+
+BREAKING CHANGE: <co se rozbije a jak migrovat>
 EOF
 )"
 ```

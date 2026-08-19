@@ -214,7 +214,7 @@ PR_ID=$(PYTHONUTF8=1 PYTHONIOENCODING=utf-8 az repos pr create \
   --organization "<org-url>" \
   --project "<project>" \
   --repository "<repo>" \
-  --source-branch "$(git branch --show-current)" \
+  --source-branch "refs/heads/$(git branch --show-current)" \
   --target-branch "dev-sprint" \
   --title "<PR title v ASCII>" \
   --description @"<cesta-k-souboru>" \
@@ -257,7 +257,7 @@ Pokud je `PR_ID` prázdné, PR se nevytvořil — postupuj podle sekce [Chybová
 - **Nejasné, jestli operace prošla** → **nikdy nevytvářej PR podruhé naslepo.** Nejdřív ověř, co na větvi existuje, ať nevznikne duplikát:
   ```bash
   az repos pr list --organization "<org-url>" --project "<project>" --repository "<repo>" \
-    --source-branch "$(git branch --show-current)" --detect false \
+    --source-branch "refs/heads/$(git branch --show-current)" --detect false \
     --query "[].{id:pullRequestId, status:status}" -o tsv
   ```
 - **Ostatní chyby** → vypiš stderr `az` a sděl uživateli, ať PR vytvoří ručně v Azure DevOps. Vypiš mu připravenou PR zprávu (title + body z kroku 4), ať ji může jen zkopírovat.
