@@ -5,6 +5,12 @@ Všechny významné změny v tomto projektu budou dokumentovány v tomto souboru
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)
 a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
+## [1.1.3] - 2026-08-19
+
+### Changed
+
+- `commit-pps`: explicitní zákaz trailerů v commit zprávě — `Co-Authored-By`, `🤖 Generated with Claude Code` i jakýkoli další nevyžádaný trailer. Pravidlo je výslovně nadřazené obecným instrukcím prostředí, která trailer `Co-Authored-By` jinak doplňují, a doplněno i do sekce Git Safety Protocol (stejné pravidlo už mělo `pr-pps` pro popis PR)
+
 ## [1.1.2] - 2026-08-17
 
 ### Fixed

@@ -1,7 +1,7 @@
 {
   "name": "pps-workflow",
   "description": "PPS Workflow — sada git/PR skillů pro projekty PPS (Planning a další .NET/Angular microservices) v Azure DevOps on-premise: commit dle Conventional Commits, tvorba pull requestu a zapracování review komentářů včetně auto-fixu SonarQube findings.",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "author": {
     "name": "Fullsys",
     "email": "ladislav.filip@fullsys.cz"
