@@ -18,6 +18,7 @@ Interní katalog Claude Code pluginů Fullsys — **skills** a **MCP servery**, 
 | [pr](plugins/pr/) | skill | Vytváření pull requestů podle strukturované šablony (ticket z větve, popis změn, dopady, testování; detekce projektové PR šablony a výchozí větve) |
 | [pps-workflow](plugins/pps-workflow/) | skill | Git/PR skilly pro projekty PPS v Azure DevOps on-premise — commit, tvorba PR, zapracování review komentářů a auto-fix SonarQube |
 | [dotnet-agentic-loop](plugins/dotnet-agentic-loop/) | skill | Zavedení deterministické agentické verifikační smyčky (build + testy jako pass/fail gate) v .NET repozitáři přes Claude Code hooks |
+| [youtrack-issues](plugins/youtrack-issues/) | skill | Zakládání Bugů a User Story v YouTracku Fullsys podle metodiky v KB (`/create-bug-issue`, `/create-issue`) |
 
 ## Co obsahuje
 

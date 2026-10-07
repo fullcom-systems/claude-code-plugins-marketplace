@@ -46,6 +46,11 @@
       "name": "dotnet-testing",
       "source": "./plugins/dotnet-testing",
       "description": "Sada skillů pro testování libovolného .NET projektu. Obsahuje skill dotnet-unit-tests (unit testy podle konvencí repozitáře) a dotnet-http-tests (.http / REST Client testy s přepínáním environmentů a CI/CD přes httpyac pro Azure DevOps i GitHub Actions)."
+    },
+    {
+      "name": "youtrack-issues",
+      "source": "./plugins/youtrack-issues",
+      "description": "Zakládání issue v YouTracku Fullsys podle metodiky v knowledge base — /create-bug-issue (Bug) a /create-issue (User Story). Vyžaduje plugin youtrack-fullsys."
     }
   ]
 }
