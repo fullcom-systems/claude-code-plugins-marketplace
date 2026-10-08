@@ -12,6 +12,10 @@ a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 - Skill `create-bug-issue` — založení Bugu podle metodiky v KB (FIR-210)
 - Skill `create-user-story` — založení User Story podle metodiky v KB (FIR-211)
 
+### Changed
+
+- README: sekce „Popis“ zmiňuje vedle MCP serveru i skilly
+
 ## [1.0.1] - 2026-07-14
 
 ### Fixed

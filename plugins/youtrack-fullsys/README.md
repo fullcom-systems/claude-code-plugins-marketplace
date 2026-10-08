@@ -4,7 +4,10 @@ Plugin pro Fullsys Claude Code Plugin Marketplace, který napojuje Claude na int
 
 ## Popis
 
-Plugin nese konfiguraci jednoho HTTP MCP serveru `youtrack`. Konfigurace je v souboru [`.mcp.json`](.mcp.json), na který se odkazuje pole `mcpServers` v manifestu pluginu. Po instalaci Claude získá nástroje pro práci s tickety, projekty, agilními boardy, komentáři, time trackingem a knowledge base YouTracku.
+Plugin obsahuje dvě části:
+
+- **MCP server `youtrack`** (HTTP). Konfigurace je v souboru [`.mcp.json`](.mcp.json), na který se odkazuje pole `mcpServers` v manifestu pluginu. Po instalaci Claude získá nástroje pro práci s tickety, projekty, agilními boardy, komentáři, time trackingem a knowledge base YouTracku.
+- **Skilly pro zakládání issue** (Bug a User Story) podle metodiky v knowledge base — viz [Skilly](#skilly). Skilly pracují s YouTrackem výhradně přes MCP server `youtrack`.
 
 ## Skilly
 
