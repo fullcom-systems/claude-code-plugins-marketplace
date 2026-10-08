@@ -8,7 +8,7 @@ description: >-
   pro požadavky na novou funkčnost (na to je /create-issue) ani pro úpravu
   existujících issue.
 user-invocable: true
-argument-hint: [popis chyby, text od zákazníka nebo ID HD požadavku]
+argument-hint: "[popis chyby, text od zákazníka nebo ID HD požadavku]"
 ---
 
 # Založení Bugu v YouTracku Fullsys
