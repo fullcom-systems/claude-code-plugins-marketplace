@@ -31,7 +31,8 @@ issue nezakládej ani nenavrhuj.
 
 ## 2. Postupuj podle metodiky
 
-* **Bez argumentu:** zeptej se na chybějící údaje podle kap. 2 článku Bug.
+* **Bez argumentu:** zeptej se na chybějící údaje podle seznamu povinných údajů v článku Bug.
+  Když v článku takový seznam nenajdeš, skonči a řekni uživateli, že metodika je neúplná.
 * **S argumentem:** použij ho jako vstup a ptej se jen na to, co v něm chybí.
 * Dodrž postup z nadřazeného článku: ptaní → hledání souvisejícího → draft → **potvrzení** → založení.
 * Nic nezakládej bez výslovného potvrzení draftu uživatelem.
