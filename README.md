@@ -12,12 +12,13 @@ Interní katalog Claude Code pluginů Fullsys — **skills** a **MCP servery**, 
 | Plugin | Typ | Popis |
 |---|---|---|
 | [docs-architect](plugins/docs-architect/) | skill | Tvorba a údržba technické dokumentace repozitáře (README, CONTRIBUTING, CHANGELOG, API spec, architektura, ADR) |
-| [youtrack-fullsys](plugins/youtrack-fullsys/) | MCP | Napojení na interní YouTrack Fullsys — tickety, projekty, boardy, knowledge base |
+| [youtrack-fullsys](plugins/youtrack-fullsys/) | MCP, skill | Napojení na interní YouTrack Fullsys — tickety, projekty, boardy, knowledge base; zakládání Bugů a User Story podle metodiky v KB (`/youtrack-fullsys:create-bug-issue`, `/youtrack-fullsys:create-user-story`) |
 | [repo-architect](plugins/repo-architect/) | skill | Analýza, návrh a oprava struktury složek a souborů GitHub repozitáře dle open-source best-practice standardů |
 | [commit](plugins/commit/) | skill | Generování commit zpráv podle Conventional Commits a interních konvencí NextFIS (český subject, ticket z větve) |
 | [pr](plugins/pr/) | skill | Vytváření pull requestů podle strukturované šablony (ticket z větve, popis změn, dopady, testování; detekce projektové PR šablony a výchozí větve) |
 | [pps-workflow](plugins/pps-workflow/) | skill | Git/PR skilly pro projekty PPS v Azure DevOps on-premise — commit, tvorba PR, zapracování review komentářů a auto-fix SonarQube |
 | [dotnet-agentic-loop](plugins/dotnet-agentic-loop/) | skill | Zavedení deterministické agentické verifikační smyčky (build + testy jako pass/fail gate) v .NET repozitáři přes Claude Code hooks |
+| [dotnet-testing](plugins/dotnet-testing/) | skill | Testování .NET projektů — unit testy podle konvencí repozitáře a `.http` / REST Client testy s přepínáním environmentů a CI/CD přes httpyac |
 
 ## Co obsahuje
 
