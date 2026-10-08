@@ -6,7 +6,6 @@ description: >-
   podle metodiky v knowledge base, vždy až po potvrzení draftu uživatelem.
   Nepoužívej pro chyby v dodané funkci (na to je
   /youtrack-fullsys:create-bug-issue) ani pro úpravu existujících issue.
-user-invocable: true
 argument-hint: "[popis požadované funkčnosti]"
 ---
 
@@ -33,7 +32,7 @@ issue nezakládej ani nenavrhuj.
 * **Bez argumentu:** zeptej se na chybějící údaje podle článku User Story.
 * **S argumentem:** použij ho jako vstup a ptej se jen na to, co v něm chybí.
 * Dodrž postup z nadřazeného článku: ptaní → hledání souvisejícího → draft → **potvrzení** → založení.
-* Nic nezakládej bez výslovného potvrzení draftu uživatelem.
+  Bez výslovného potvrzení draftu uživatelem nic nezakládej.
 
 ## 3. Výstup
 

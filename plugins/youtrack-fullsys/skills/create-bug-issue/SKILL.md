@@ -7,7 +7,6 @@ description: >-
   potvrzení draftu uživatelem. Nepoužívej pro požadavky na novou funkčnost
   (na to je /youtrack-fullsys:create-user-story) ani pro úpravu existujících
   issue.
-user-invocable: true
 argument-hint: "[popis chyby, text od zákazníka nebo ID HD požadavku]"
 ---
 
@@ -35,7 +34,7 @@ issue nezakládej ani nenavrhuj.
   Když v článku takový seznam nenajdeš, skonči a řekni uživateli, že metodika je neúplná.
 * **S argumentem:** použij ho jako vstup a ptej se jen na to, co v něm chybí.
 * Dodrž postup z nadřazeného článku: ptaní → hledání souvisejícího → draft → **potvrzení** → založení.
-* Nic nezakládej bez výslovného potvrzení draftu uživatelem.
+  Bez výslovného potvrzení draftu uživatelem nic nezakládej.
 
 ## 3. Výstup
 
