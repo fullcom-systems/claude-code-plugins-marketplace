@@ -13,14 +13,17 @@ a příklady jsou v knowledge base YouTracku a skill si je načte při každém 
 
 | Skill | Výsledek | Metodika v KB |
 | --- | --- | --- |
-| `/create-bug-issue` | issue `Bug` ve stavu `Open` | QA: Zakládání Bugu (pro AI agenta) |
-| `/create-issue` | issue `User Story` ve stavu `Open` | QA: Zakládání User Story (pro AI agenta) |
+| `/youtrack-fullsys:create-bug-issue` | issue `Bug` ve stavu `Open` | QA: Zakládání Bugu (pro AI agenta) |
+| `/youtrack-fullsys:create-user-story` | issue `User Story` ve stavu `Open` | QA: Zakládání User Story (pro AI agenta) |
 
 ```
-/create-bug-issue
-/create-bug-issue Polabské hlásí, že terminál při naskladnění hlásí „Šarže je povinná“, HD-4521
-/create-issue Skladníci chtějí na terminálu dělit palety
+/youtrack-fullsys:create-bug-issue
+/youtrack-fullsys:create-bug-issue customer-12345 hlásí, že terminál při naskladnění hlásí „Šarže je povinná“, HD-00000
+/youtrack-fullsys:create-user-story Skladníci chtějí na terminálu dělit palety
 ```
+
+Skilly volejte s prefixem pluginu (`youtrack-fullsys:`), aby se nezaměnily se stejně pojmenovanými
+skilly jiných pluginů.
 
 Agent se doptá na chybějící údaje, dohledá související issue, ukáže draft a issue založí až po potvrzení.
 K založení issue potřebujete práva zakládat issue v cílovém projektu.

@@ -5,8 +5,8 @@ description: >-
   Fullsys — z vlastního popisu, e-mailu zákazníka, HD požadavku, logu nebo
   neúspěšného testu. Agent se doptá na chybějící údaje, dohledá související
   issue a po potvrzení draftu založí issue typu Bug ve stavu Open. Nepoužívej
-  pro požadavky na novou funkčnost (na to je /create-issue) ani pro úpravu
-  existujících issue.
+  pro požadavky na novou funkčnost (na to je /youtrack-fullsys:create-user-story)
+  ani pro úpravu existujících issue.
 user-invocable: true
 argument-hint: "[popis chyby, text od zákazníka nebo ID HD požadavku]"
 ---

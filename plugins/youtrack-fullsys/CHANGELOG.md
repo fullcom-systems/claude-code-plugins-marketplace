@@ -10,7 +10,7 @@ a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 ### Added
 
 - Skill `create-bug-issue` — založení Bugu podle metodiky v KB (FIR-210)
-- Skill `create-issue` — založení User Story podle metodiky v KB (FIR-211)
+- Skill `create-user-story` — založení User Story podle metodiky v KB (FIR-211)
 
 ## [1.0.1] - 2026-07-14
 

@@ -15,7 +15,7 @@
     {
       "name": "youtrack-fullsys",
       "source": "./plugins/youtrack-fullsys",
-      "description": "MCP plugin pro napojení na interní YouTrack Fullsys (tickety, projekty, boardy, knowledge base) přes HTTP MCP server. Obsahuje skilly /create-bug-issue (Bug) a /create-issue (User Story) pro zakládání issue podle metodiky v knowledge base."
+      "description": "MCP plugin pro napojení na interní YouTrack Fullsys (tickety, projekty, boardy, knowledge base) přes HTTP MCP server. Obsahuje skilly /youtrack-fullsys:create-bug-issue (Bug) a /youtrack-fullsys:create-user-story (User Story) pro zakládání issue podle metodiky v knowledge base."
     },
     {
       "name": "repo-architect",

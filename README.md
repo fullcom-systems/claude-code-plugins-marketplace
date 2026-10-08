@@ -12,7 +12,7 @@ Interní katalog Claude Code pluginů Fullsys — **skills** a **MCP servery**, 
 | Plugin | Typ | Popis |
 |---|---|---|
 | [docs-architect](plugins/docs-architect/) | skill | Tvorba a údržba technické dokumentace repozitáře (README, CONTRIBUTING, CHANGELOG, API spec, architektura, ADR) |
-| [youtrack-fullsys](plugins/youtrack-fullsys/) | MCP, skill | Napojení na interní YouTrack Fullsys — tickety, projekty, boardy, knowledge base; zakládání Bugů a User Story podle metodiky v KB (`/create-bug-issue`, `/create-issue`) |
+| [youtrack-fullsys](plugins/youtrack-fullsys/) | MCP, skill | Napojení na interní YouTrack Fullsys — tickety, projekty, boardy, knowledge base; zakládání Bugů a User Story podle metodiky v KB (`/youtrack-fullsys:create-bug-issue`, `/youtrack-fullsys:create-user-story`) |
 | [repo-architect](plugins/repo-architect/) | skill | Analýza, návrh a oprava struktury složek a souborů GitHub repozitáře dle open-source best-practice standardů |
 | [commit](plugins/commit/) | skill | Generování commit zpráv podle Conventional Commits a interních konvencí NextFIS (český subject, ticket z větve) |
 | [pr](plugins/pr/) | skill | Vytváření pull requestů podle strukturované šablony (ticket z větve, popis změn, dopady, testování; detekce projektové PR šablony a výchozí větve) |
