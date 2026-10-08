@@ -36,16 +36,5 @@ Když článek podle ID nenajdeš, vyhledej ho v knowledge base podle přesného
 
 ## 2. Postupuj podle metodiky
 
-* **Bez argumentu:** zeptej se na chybějící údaje podle seznamu povinných údajů v článku Bug.
-  Když v článku takový seznam nenajdeš, skonči a řekni uživateli, že metodika je neúplná.
-* **S argumentem:** použij ho jako vstup a ptej se jen na to, co v něm chybí.
-* Dodrž postup z nadřazeného článku: ptaní → hledání souvisejícího → draft → **potvrzení** → založení.
-  Bez výslovného potvrzení draftu uživatelem nic nezakládej.
-
-## 3. Výstup
-
-Po založení vrať ID, odkaz `https://youtrack.fullsys.cz/issue/<ID>` a seznam polí nebo linků, které se
-nepodařilo nastavit.
-
-Když uživatel s výsledkem není spokojený a jde o chybu metodiky (ne o jeden případ), navrhni mu zapsat
-podnět do komentáře článku *QA: Zakládání issue v YouTracku (pro AI agenta)*.
+Postup, pravidla, formát draftu i výstup jsou v načtených článcích. Při rozporu platí podčlánek.
+Bez výslovného potvrzení draftu uživatelem nic nezakládej.
