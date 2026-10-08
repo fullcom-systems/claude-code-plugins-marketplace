@@ -1,12 +1,12 @@
 {
   "name": "youtrack-fullsys",
-  "description": "MCP plugin pro napojení na interní YouTrack Fullsys (https://youtrack.fullsys.cz). Zpřístupní Claude práci s tickety, projekty, boardy a knowledge base.",
-  "version": "1.0.1",
+  "description": "MCP plugin pro napojení na interní YouTrack Fullsys (https://youtrack.fullsys.cz). Zpřístupní Claude práci s tickety, projekty, boardy a knowledge base. Obsahuje skilly /create-bug-issue (Bug) a /create-issue (User Story) pro zakládání issue podle metodiky v knowledge base.",
+  "version": "1.1.0",
   "author": {
     "name": "Fullsys",
     "email": "ladislav.filip@fullsys.cz"
   },
   "license": "MIT",
-  "keywords": ["youtrack", "mcp", "issue-tracking", "fullsys"],
+  "keywords": ["youtrack", "mcp", "issue-tracking", "fullsys", "bug", "qa"],
   "mcpServers": "./.mcp.json"
 }

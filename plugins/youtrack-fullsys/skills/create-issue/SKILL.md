@@ -1,37 +1,36 @@
 ---
-name: create-bug-issue
+name: create-issue
 description: >-
-  Použij, když uživatel našel chybu a chce ji založit jako Bug v YouTracku
-  Fullsys — z vlastního popisu, e-mailu zákazníka, HD požadavku, logu nebo
-  neúspěšného testu. Agent se doptá na chybějící údaje, dohledá související
-  issue a po potvrzení draftu založí issue typu Bug ve stavu Open. Nepoužívej
-  pro požadavky na novou funkčnost (na to je /create-issue) ani pro úpravu
-  existujících issue.
+  Použij, když analytik, zadavatel nebo podpora potřebuje v YouTracku Fullsys
+  založit požadavek na novou funkčnost nebo změnu chování. Agent se doptá na
+  chybějící údaje, navrhne akceptační kritéria, dohledá související issue a po
+  potvrzení draftu založí User Story ve stavu Open. Nepoužívej pro chyby
+  v dodané funkci (na to je /create-bug-issue) ani pro úpravu existujících issue.
 user-invocable: true
-argument-hint: "[popis chyby, text od zákazníka nebo ID HD požadavku]"
+argument-hint: "[popis požadované funkčnosti]"
 ---
 
-# Založení Bugu v YouTracku Fullsys
+# Založení User Story v YouTracku Fullsys
 
 Pravidla nejsou v tomto souboru. Jsou v knowledge base YouTracku a mění se tam. **Vždy je načti znovu,
 nepoužívej verzi z paměti ani z dřívější konverzace.**
 
 ## 1. Načti metodiku
 
-Přes MCP server `youtrack` (plugin `youtrack-fullsys`) načti celý obsah těchto článků, v tomto pořadí:
+Přes MCP server `youtrack` (součást tohoto pluginu) načti celý obsah těchto článků, v tomto pořadí:
 
 1. `NIN-A-493` — *QA: Zakládání issue v YouTracku (pro AI agenta)*
-2. `NIN-A-494` — *QA: Zakládání Bugu (pro AI agenta)*
+2. `NIN-A-495` — *QA: Zakládání User Story (pro AI agenta)*
 
 Když článek podle ID nenajdeš, vyhledej ho v knowledge base podle přesného názvu.
 
 **Když MCP server `youtrack` není dostupný nebo se článek nepodaří načíst, skonči** a řekni uživateli,
-že je potřeba nainstalovat plugin `youtrack-fullsys` a nastavit `YT_FULLSYS_TOKEN`. Bez metodiky
+že je potřeba nastavit proměnnou `YT_FULLSYS_TOKEN` a restartovat Claude Code. Bez metodiky
 issue nezakládej ani nenavrhuj.
 
 ## 2. Postupuj podle metodiky
 
-* **Bez argumentu:** zeptej se na chybějící údaje podle kap. 2 článku Bug.
+* **Bez argumentu:** zeptej se na chybějící údaje podle článku User Story.
 * **S argumentem:** použij ho jako vstup a ptej se jen na to, co v něm chybí.
 * Dodrž postup z nadřazeného článku: ptaní → hledání souvisejícího → draft → **potvrzení** → založení.
 * Nic nezakládej bez výslovného potvrzení draftu uživatelem.
