@@ -23,9 +23,15 @@ Přes MCP server `youtrack` (součást tohoto pluginu) načti celý obsah těcht
 
 Když článek podle ID nenajdeš, vyhledej ho v knowledge base podle přesného názvu.
 
-**Když MCP server `youtrack` není dostupný nebo se článek nepodaří načíst, skonči** a řekni uživateli,
-že je potřeba nastavit proměnnou `YT_FULLSYS_TOKEN` a restartovat Claude Code. Bez metodiky
-issue nezakládej ani nenavrhuj.
+**Když metodiku nenačteš, skonči.** Bez ní issue nezakládej ani nenavrhuj. Uživateli řekni, co přesně selhalo:
+
+* **Nástroje MCP serveru `youtrack` nejsou dostupné:** server se nenačetl. Nejčastěji chybí
+  proměnná `YT_FULLSYS_TOKEN`. Ať ji nastaví a restartuje Claude Code.
+* **Server vrací chybu autentizace (401):** token je neplatný nebo expirovaný. Ať vygeneruje
+  nový a restartuje Claude Code.
+* **Server funguje, ale článek nejde načíst** (403, nenalezen podle ID ani podle názvu):
+  uveď ID a název článku. Uživatel nemá přístup do knowledge base projektu NIN, nebo byl článek
+  přesunut či smazán. Ať si ověří přístup u správce KB. Token neměnit.
 
 ## 2. Postupuj podle metodiky
 
