@@ -2,11 +2,10 @@
 name: create-user-story
 description: >-
   Použij, když analytik, zadavatel nebo podpora potřebuje v YouTracku Fullsys
-  založit požadavek na novou funkčnost nebo změnu chování. Agent se doptá na
-  chybějící údaje, navrhne akceptační kritéria, dohledá související issue a po
-  potvrzení draftu založí User Story ve stavu Open. Nepoužívej pro chyby
-  v dodané funkci (na to je /youtrack-fullsys:create-bug-issue) ani pro úpravu
-  existujících issue.
+  založit požadavek na novou funkčnost nebo změnu chování. Založíš User Story
+  podle metodiky v knowledge base, vždy až po potvrzení draftu uživatelem.
+  Nepoužívej pro chyby v dodané funkci (na to je
+  /youtrack-fullsys:create-bug-issue) ani pro úpravu existujících issue.
 user-invocable: true
 argument-hint: "[popis požadované funkčnosti]"
 ---
