@@ -16,7 +16,7 @@ Interní katalog Claude Code pluginů Fullsys — **skills** a **MCP servery**, 
 | [repo-architect](plugins/repo-architect/) | skill | Analýza, návrh a oprava struktury složek a souborů GitHub repozitáře dle open-source best-practice standardů |
 | [commit](plugins/commit/) | skill | Generování commit zpráv podle Conventional Commits a interních konvencí NextFIS (český subject, ticket z větve) |
 | [pr](plugins/pr/) | skill | Vytváření pull requestů podle strukturované šablony (ticket z větve, popis změn, dopady, testování; detekce projektové PR šablony a výchozí větve) |
-| [pps-workflow](plugins/pps-workflow/) | skill | Git/PR skilly pro projekty PPS v Azure DevOps on-premise — commit, tvorba PR, zapracování review komentářů a auto-fix SonarQube |
+| [pps-workflow](plugins/pps-workflow/) | skill | Git/PR skilly pro projekty PPS v Azure DevOps on-premise — commit, tvorba PR, zapracování review komentářů a auto-fix SonarQube, lokální code review podle `REVIEW.md` repa |
 | [dotnet-agentic-loop](plugins/dotnet-agentic-loop/) | skill | Zavedení deterministické agentické verifikační smyčky (build + testy jako pass/fail gate) v .NET repozitáři přes Claude Code hooks |
 | [dotnet-testing](plugins/dotnet-testing/) | skill | Testování .NET projektů — unit testy podle konvencí repozitáře a `.http` / REST Client testy s přepínáním environmentů a CI/CD přes httpyac |
 
