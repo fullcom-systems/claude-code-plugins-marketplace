@@ -5,6 +5,15 @@ Všechny významné změny v tomto projektu budou dokumentovány v tomto souboru
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)
 a projekt dodržuje [Semantic Versioning](https://semver.org/lang/cs/).
 
+## [1.2.0] - 2026-11-05
+
+### Added
+
+- `review-lokalne`: lokální code review změny před založením PR podle kontraktu repa (`REVIEW.md`), pravidel s `paths:` (`.claude/rules`, `.ai-rulez/rules`) a společného základu PPS. Skript `review-diff.ps1` připraví anotovaný diff (čísla řádků), vybere pravidla podle změněných cest a ohlásí změnu samotných kritérií. Výstup jen do terminálu, nic se nepublikuje
+- `review-init`: návrh `REVIEW.md` pro mikroslužbu — inventura autorit repa (`review-inventory.ps1`), doložení každého pravidla počtem v kódu (`review-count.ps1`), kontrola formy a zkušební review na skutečném PR. Návrh se zapíše mimo repo
+- Kontrakt v1 (`review-lokalne/references/kontrakt-v1.md`), šablona `REVIEW.md`, obecná pravidla review (škála závažnosti, pravidlo důkazu) a PPS baseline (zápis a publikace zprávy v jedné transakci)
+- Kalibrováno naslepo na skutečných chybách z `planning` a `technology` (dvojice chyba → Fix PR): na nezávislém vzorku nalezeny 3 ze 4 chyb
+
 ## [1.1.4] - 2026-08-19
 
 ### Fixed
