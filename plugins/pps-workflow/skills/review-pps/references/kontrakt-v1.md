@@ -1,14 +1,14 @@
 # Kontrakt v1 – lokální review a REVIEW.md
 
-Popisuje, **co skill `review-lokalne` od repa čeká** a **co repo od skillu dostane**. Je pro autory `REVIEW.md`
-a pro údržbu skriptů; skill ho při review nečte. Šablona `REVIEW.md` je ve skillu `review-init`
+Popisuje, **co skill `review-pps` od repa čeká** a **co repo od skillu dostane**. Je pro autory `REVIEW.md`
+a pro údržbu skriptů; skill ho při review nečte. Šablona `REVIEW.md` je ve skillu `review-init-pps`
 (`references/sablona-REVIEW.md`).
 
 ## 1. Pojmy
 
 | Pojem | Význam |
 |---|---|
-| **Skill** | Centrální `review-lokalne`. Drží postup (diff → kritéria → posouzení → výstup), obecná pravidla a PPS baseline. Neobsahuje nic specifického pro jedno repo. |
+| **Skill** | Centrální `review-pps`. Drží postup (diff → kritéria → posouzení → výstup), obecná pravidla a PPS baseline. Neobsahuje nic specifického pro jedno repo. |
 | **Skript** | Součást skillu (`scripts/`). Připraví anotovaný diff, index patchů a výběr pravidel. Běží v PowerShell 7 na macOS i Windows. |
 | **Kontrakt repa** | Soubor `REVIEW.md` v kořeni repa. Kalibruje závažnost, říká, na co se zaměřit a co nehlásit, a odkazuje na autority. Pravidla **neopisuje**. |
 | **Autorita** | Soubor, který pravidla skutečně drží: `AGENTS.md`, `CLAUDE.md`, pravidla s `paths:`, repo skilly, ADR. |
@@ -113,7 +113,7 @@ Co z příkladů platí ve všech repech, drží PPS baseline (`pps-baseline.md`
 1. Na **prvním řádku výstupu** skill napíše: *„Repo nemá REVIEW.md – review je obecné, jen podle autorit a PPS baseline.“*
 2. Čte autority z §3 (bod 5), všechna pravidla s `paths:` i bez nich, a navíc `.github/copilot-instructions.md`.
 3. Platí škála z §5 bez příkladů repa. Výchozí base je `dev-sprint`.
-4. Na konci nabídne `/review-init <repo>`, který návrh `REVIEW.md` připraví mimo repo. Sám ho nezapíše.
+4. Na konci nabídne `/review-init-pps <repo>`, který návrh `REVIEW.md` připraví mimo repo. Sám ho nezapíše.
 
 ## 7. Obecná pravidla skillu (platí vždy)
 
@@ -173,7 +173,7 @@ ERROR=<chyba; jediný řádek výstupu, exit kód 1>
 - Frontmatter čte `ReviewCommon.psm1`: skaláry, seznamy (`- x`, `[a, b]`), víceřádkové hodnoty (`>-`, `|`)
   a komentáře `# …` za hodnotou i za položkou seznamu.
 
-### 8.1 Inventura repa (`review-inventory.ps1`, pro `review-init`)
+### 8.1 Inventura repa (`review-inventory.ps1`, pro `review-init-pps`)
 
 | Parametr | Výchozí | Význam |
 |---|---|---|
@@ -191,7 +191,7 @@ Oba skripty sdílejí čtení frontmatteru a globů v `ReviewCommon.psm1`. Inven
 pravidel ai-rulez z bloku v `.gitignore`, oddělí odkazy do gitignorovaných (generovaných) cest od skutečně rozbitých,
 zjistí `EnforceCodeStyleInBuild` a vypnuté diagnostiky a u commitů uvede počet souborů kódu.
 
-### 8.2 Doložení konvence (`review-count.ps1`, pro `review-init`)
+### 8.2 Doložení konvence (`review-count.ps1`, pro `review-init-pps`)
 
 `-RepoPath`, `-Files` (globy v gitu, čárkou), `-Select` (soubor patří do populace, jen když obsahuje vzor),
 `-Expect` (vzor konvence), `-Absent` (konvence = vzor chybí), `-Show`. Výstup `POPULATION=`, `CONFORM=`, `MISS=`,

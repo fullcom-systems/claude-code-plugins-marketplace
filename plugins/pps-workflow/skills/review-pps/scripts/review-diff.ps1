@@ -5,7 +5,7 @@
 #   - vybere pravidla (.claude/rules, .ai-rulez/rules, mapa z REVIEW.md), která se změny týkají.
 # Nic neposílá, nic nepublikuje a v repu nic nemění - zapisuje jen do dočasného adresáře.
 #
-# Spouští ho skill `review-lokalne`. Ručně dává smysl jen na ladění:
+# Spouští ho skill `review-pps`. Ručně dává smysl jen na ladění:
 #   pwsh -NoProfile -File review-diff.ps1 -RepoPath ../planning
 #   pwsh -NoProfile -File review-diff.ps1 -RepoPath . -Base origin/dev-sprint -IncludeWorkingTree
 #

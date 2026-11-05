@@ -1,5 +1,5 @@
 #Requires -Version 7.0
-# Doloží konvenci počtem pro `review-init`: z kolika souborů populace se kolik drží vzoru.
+# Doloží konvenci počtem pro `review-init-pps`: z kolika souborů populace se kolik drží vzoru.
 # Populace = soubory v gitu odpovídající -Files, volitelně zúžené na ty, které obsahují -Select.
 # Nic nemění, jen čte soubory v gitu.
 #

@@ -1,5 +1,5 @@
 #Requires -Version 7.0
-# Inventura repa pro návrh REVIEW.md (skill `review-init`). Posbírá fakta, ze kterých se kontrakt skládá:
+# Inventura repa pro návrh REVIEW.md (skill `review-init-pps`). Posbírá fakta, ze kterých se kontrakt skládá:
 # autority, pravidla, skilly, stack, kontroly v CI, rozbité odkazy a soubory, které mění skoro každý PR.
 # Nic neposílá a v repu nic nemění - zapisuje jen inventory.md do dočasného adresáře.
 #

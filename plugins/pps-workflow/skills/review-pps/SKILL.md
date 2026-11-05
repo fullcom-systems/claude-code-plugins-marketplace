@@ -1,8 +1,8 @@
 ---
-name: review-lokalne
+name: review-pps
 description: >-
   Použij, když chce uživatel před založením PR projít změnu v mikroslužbě PPS G2 code review
-  na svém stroji — „udělej mi review", „projdi diff proti dev-sprint", „/review-lokalne planning".
+  na svém stroji — „udělej mi review", „projdi diff proti dev-sprint", „/review-pps planning".
   Připravíš anotovaný diff, najdeš kontrakt repa (REVIEW.md) a pravidla podle změněných cest
   a vypíšeš nálezy do terminálu; nic nepublikuješ. Nepoužívej pro vysvětlení cizího PR,
   vypořádání připomínek z PR (pr-fix-pps) ani obecný lov chyb bez pravidel repa (/code-review).
@@ -17,7 +17,7 @@ Skill drží jen postup. Co se v repu hlídá, drží repo samo (`REVIEW.md` a j
 proto **neopisuj z paměti ani odsud**, čti je ze zdrojů, které najde skript.
 
 Specifikace kontraktu (verze 1): [`references/kontrakt-v1.md`](references/kontrakt-v1.md). Při review ji
-nečti, je určená autorům `REVIEW.md` (návrh připraví skill `review-init`).
+nečti, je určená autorům `REVIEW.md` (návrh připraví skill `review-init-pps`).
 
 ---
 
@@ -88,7 +88,7 @@ Všechno naráz, jedním blokem volání `Read`:
 **Fallback, když `CONTRACT=none`:** místo bodů 3 a 5 čti, co z toho v repu existuje: `CLAUDE.md`,
 `.ai-rulez/context/AGENTS.md`, `AGENTS.md` a `.github/copilot-instructions.md`. Na **první řádek výstupu**
 napiš: *„Repo nemá REVIEW.md – review je obecné, jen podle autorit a PPS baseline.“* Na konci výstupu nabídni
-`/review-init <repo>`, který návrh připraví.
+`/review-init-pps <repo>`, který návrh připraví.
 
 ### 3. Posuď změnu
 
@@ -143,6 +143,6 @@ Do terminálu, v tomto tvaru:
 
 - **Nic nepublikuj a necommituj.** Žádný `git commit`, `git push`, komentář do PR ani zápis do Jiry.
 - **Neopravuj nálezy**, dokud o to uživatel nepožádá. Review a oprava jsou dva kroky.
-- **Do repa nic nezapisuj**, ani `REVIEW.md`. Chybí-li, nabídni jeho návrh skillem `review-init`.
+- **Do repa nic nezapisuj**, ani `REVIEW.md`. Chybí-li, nabídni jeho návrh skillem `review-init-pps`.
 - Narazíš-li v diffu na credentials, hodnotu nereprodukuj: uveď typ a místo, doporuč rotaci a nález označ 🔴.
 - Lokální review **nenahrazuje** review na PR. Nikdo kromě autora ho nevidí.

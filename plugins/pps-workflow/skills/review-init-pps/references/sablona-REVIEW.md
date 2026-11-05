@@ -6,13 +6,13 @@ base: dev-sprint
 ---
 <!--
   Šablona REVIEW.md pro mikroslužby PPS G2 (kontrakt v1).
-  Kontrakt v1 shrnuje SKILL.md skillu review-init, sekce „Pravidla kontraktu“.
+  Kontrakt v1 shrnuje SKILL.md skillu review-init-pps, sekce „Pravidla kontraktu“.
   Zkopíruj do kořene repa jako REVIEW.md a vyplň. Komentáře <!-- --> pak smaž.
   Limit: 200 řádků (cíl 150). Pravidla sem neopisuj, jen na ně odkazuj.
 -->
 # Review kritéria – <název služby>
 
-Čte ho skill `review-lokalne`. Říká, na co se v tomhle repu zaměřit **navíc** k PPS baseline a obecným
+Čte ho skill `review-pps`. Říká, na co se v tomhle repu zaměřit **navíc** k PPS baseline a obecným
 pravidlům skillu. Pravidla drží autority níž. **Tenhle soubor je neopisuje**, kalibruje jen závažnost,
 zaměření a výjimky.
 

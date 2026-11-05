@@ -1,11 +1,11 @@
 ---
-name: review-init
+name: review-init-pps
 description: >-
   Použij, když chce uživatel pro mikroslužbu PPS G2 připravit nebo aktualizovat REVIEW.md, tedy
-  kontrakt, podle kterého skill review-lokalne dělá code review — „připrav REVIEW.md pro machinery",
-  „navrhni pravidla review pro tohle repo", „repo nemá REVIEW.md", „/review-init planning".
+  kontrakt, podle kterého skill review-pps dělá code review — „připrav REVIEW.md pro machinery",
+  „navrhni pravidla review pro tohle repo", „repo nemá REVIEW.md", „/review-init-pps planning".
   Zinventarizuješ autority repa, kandidáty pravidel ověříš v kódu, návrh vyzkoušíš na skutečném PR
-  a zapíšeš ho mimo repo. Nepoužívej pro samotné review (review-lokalne) ani pro psaní AGENTS.md
+  a zapíšeš ho mimo repo. Nepoužívej pro samotné review (review-pps) ani pro psaní AGENTS.md
   či CLAUDE.md.
 argument-hint: "[repo] [--vystup <cesta>] [--bez-kalibrace]"
 allowed-tools: Read, Grep, Glob, Write, Bash(pwsh -NoProfile -File *), Bash(git -C * grep *), Bash(git -C * log *), Bash(git -C * show *), Bash(git -C * rev-parse *), Bash(git -C * ls-files *), Bash(git -C * worktree *), Bash(git -C * status *), Bash(rm -rf *)
@@ -13,11 +13,11 @@ allowed-tools: Read, Grep, Glob, Write, Bash(pwsh -NoProfile -File *), Bash(git 
 
 # Návrh REVIEW.md — mikroslužby PPS G2
 
-Cíl: kontrakt, podle kterého `review-lokalne` posuzuje změny v daném repu. Návrh musí být **pravdivý
+Cíl: kontrakt, podle kterého `review-pps` posuzuje změny v daném repu. Návrh musí být **pravdivý
 vůči kódu**. Každé pravidlo v něm je doložené a nic z něj neopisuje autority. Kontrakt, který tvrdí
 něco, co kód nedělá, vyrobí falešné nálezy u každého review.
 
-Skripty leží ve skillu `review-lokalne` (sourozenecká složka tohoto skillu): `../review-lokalne/scripts/`
+Skripty leží ve skillu `review-pps` (sourozenecká složka tohoto skillu): `../review-pps/scripts/`
 vůči base directory, kterou ti harness oznámil při načtení. Šablona: [`references/sablona-REVIEW.md`](references/sablona-REVIEW.md).
 
 ---
@@ -48,13 +48,13 @@ worktree. Na konci ho smaž, kromě návrhu, pokud `--vystup` nebylo zadané.
 - **Povinné sekce:** `## Autority`, `## Závažnost`, `## Na co se zaměřit`, `## Neřeš`.
   Volitelné: `## Co číst podle změněné cesty`, `## Pravidlo důkazu` (jen zpřísnění), `## Co v kódu ještě není`.
 - **Škála závažnosti je pevná** (🔴 critical, 🟠 high, 🟡 medium, 🟢 low, ℹ️ info). Repo dodává jen příklady.
-  Kategorie najdeš v `../review-lokalne/references/obecna-pravidla.md`.
+  Kategorie najdeš v `../review-pps/references/obecna-pravidla.md`.
 - **Mapa cest** (`## Co číst podle změněné cesty`): tabulka `Zdroj | Platí pro | Poznámka`, zdroj jako odkaz,
   globy v backticks. Jen pro zdroje **bez** `paths:` ve frontmatteru: znalostní skilly a specifikace chování
   (`openspec/specs/<capability>/spec.md`). Glob je permisivní: `*` zasáhne i `/`, `**/` i nula složek.
 - **Neodkazuj na generované cesty** (`.agents/`, cokoli gitignorovaného). U kolegy bez generování by odkaz vedl nikam.
 - **Limit 200 řádků, cíl do 150.** Pravidla se neopisují, jen se na ně odkazuje.
-- Co platí ve všech repech, drží PPS baseline (`../review-lokalne/references/pps-baseline.md`) – neopakuj ho,
+- Co platí ve všech repech, drží PPS baseline (`../review-pps/references/pps-baseline.md`) – neopakuj ho,
   jen ho v `REVIEW.md` přizpůsob mechanismu repa (např. jak se tu publikuje přes outbox).
 - Odkazy relativně ke kořeni repa (návrh bude ležet v kořeni). Žádná data zákazníka ani credentials.
 
@@ -65,7 +65,7 @@ worktree. Na konci ho smaž, kromě návrhu, pokud `--vystup` nebylo zadané.
 ### 1. Inventura
 
 ```bash
-pwsh -NoProfile -File "<base dir>/../review-lokalne/scripts/review-inventory.ps1" -RepoPath <repo> -OutDir <prac>/inventura
+pwsh -NoProfile -File "<base dir>/../review-pps/scripts/review-inventory.ps1" -RepoPath <repo> -OutDir <prac>/inventura
 ```
 
 Výstup `REPO=`, `HEAD=`, `BASE=`, `CONTRACT=`, `INVENTORY=`, `WARN=`, při chybě `ERROR=` (pak skonči). Přečti
@@ -125,7 +125,7 @@ Pravidlo, které neověříš, do `REVIEW.md` **nepiš**. Patří do seznamu ote
 
 - **Konvenci doložíš počtem** pomocným skriptem (bez shellových rour, ty `allowed-tools` nepovolují):
   ```bash
-  pwsh -NoProfile -File "<base dir>/../review-lokalne/scripts/review-count.ps1" -RepoPath <repo> \
+  pwsh -NoProfile -File "<base dir>/../review-pps/scripts/review-count.ps1" -RepoPath <repo> \
       -Files 'src/**/*.cs' -Select ': AbstractEventProcessor<[\s\S]*catch' -Expect 'throw;'
   ```
   Vrací `POPULATION=`, `CONFORM=` a `MISS=` (odchylky). Regulární výrazy jsou .NET a `-Absent` počítá soubory, kde
@@ -149,7 +149,7 @@ Pravidlo, které neověříš, do `REVIEW.md` **nepiš**. Patří do seznamu ote
    - ❌ odstavec, který převypráví sekci `AGENTS.md` vlastními slovy
 2. Ověř formu:
    ```bash
-   pwsh -NoProfile -File "<base dir>/../review-lokalne/scripts/review-diff.ps1" -RepoPath <repo> -Base HEAD -ContractPath <návrh> -OutDir <prac>/kontrola
+   pwsh -NoProfile -File "<base dir>/../review-pps/scripts/review-diff.ps1" -RepoPath <repo> -Base HEAD -ContractPath <návrh> -OutDir <prac>/kontrola
    ```
    Skript kontroluje odkazy, délku, verzi, povinné sekce a to, že každý glob z mapy sedí aspoň na jeden soubor v gitu.
    Kromě `WARN=` o čtení kontraktu odjinud a o prázdném diffu nesmí přijít žádné varování.
@@ -157,9 +157,9 @@ Pravidlo, které neověříš, do `REVIEW.md` **nepiš**. Patří do seznamu ote
    (sloupec *Z toho kód*), nejlépe takový, který se dotýká oblastí z kroku 3. Číslo PR je v popisu commitu. Pak:
    ```bash
    git -C <repo> worktree add --detach <prac>/worktree <commit>
-   pwsh -NoProfile -File "<base dir>/../review-lokalne/scripts/review-diff.ps1" -RepoPath <prac>/worktree -Base <commit>^ -ContractPath <návrh> -OutDir <prac>/kalibrace
+   pwsh -NoProfile -File "<base dir>/../review-pps/scripts/review-diff.ps1" -RepoPath <prac>/worktree -Base <commit>^ -ContractPath <návrh> -OutDir <prac>/kalibrace
    ```
-   Projdi ho podle `review-lokalne` (kroky 2–4). Sleduj tři věci:
+   Projdi ho podle `review-pps` (kroky 2–4). Sleduj tři věci:
    - nálezy, které jsou jen šum (pravidlo je moc přísné, nebo patří do *Neřeš*),
    - pravidla, u kterých nešlo vyplnit sloupec *Pravidlo*,
    - konvence jiného repa, které se sem nepřenášejí.
