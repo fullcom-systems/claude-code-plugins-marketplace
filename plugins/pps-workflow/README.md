@@ -1,6 +1,6 @@
 # pps-workflow
 
-Sada git/PR skillů pro projekty **PPS** (Planning a další .NET/Angular microservices) v **Azure DevOps on-premise** (Škoda). Pokrývá celý workflow od commitu přes založení pull requestu až po zapracování review komentářů.
+Sada git/PR skillů pro projekty **PPS** (Planning a další .NET/Angular microservices) v **Azure DevOps on-premise** (Škoda). Pokrývá celý workflow od lokálního review přes commit a založení pull requestu až po zapracování review komentářů.
 
 > Určeno pro PPS, **nezávisí** na YouTrack ani na konvencích NextFIS. Pro NextFIS použij pluginy `commit` a `pr`.
 
@@ -11,14 +11,16 @@ Sada git/PR skillů pro projekty **PPS** (Planning a další .NET/Angular micros
 | `commit-pps` | automaticky i `/commit-pps` | Conventional Commits — analyzuje diff, určí type/scope/popis, commitne; s argumentem `push` provede i `git push`. |
 | `pr-pps` | jen `/pr-pps` | Vytvoří PR do `dev-sprint` přes Azure CLI — verifikace build/test/lint, JIRA odkaz, ověřovací checklist. |
 | `pr-fix-pps` | jen `/pr-fix-pps` | Zapracuje review komentáře z PR — auto-fix SonarQube findings, reviewer komentáře k potvrzení, commit + push. |
+| `review-pps` | automaticky i `/review-pps [repo] [base] [--rozpracovane]` | Lokální code review změny podle `REVIEW.md` repa a pravidel podle změněných cest. Nic nepublikuje. |
+| `review-init-pps` | automaticky i `/review-init-pps [repo] [--vystup <cesta>]` | Navrhne `REVIEW.md` pro mikroslužbu — pravidla ověřená v kódu, zkušební review na skutečném PR. Do repa nezapisuje. |
 
 `pr-pps` a `pr-fix-pps` mají `disable-model-invocation: true` — spustí se **pouze** explicitním zavoláním, ne automaticky.
 
 ## Workflow
 
 ```
-commit-pps  →  pr-pps  →  (review)  →  pr-fix-pps
-   commit       PR                       zapracování připomínek
+review-pps  →  commit-pps  →  pr-pps  →  (review)  →  pr-fix-pps
+ lokální review     commit         PR                       zapracování připomínek
 ```
 
 Push je centralizovaný v `commit-pps`: `pr-pps` i `pr-fix-pps` volají `/commit-pps push`, takže logika pushe žije na jednom místě.
@@ -52,6 +54,24 @@ PAT v env proměnné `AZURE_DEVOPS_EXT_PAT` se scope **Code (Read & Write)** (te
 
 **Nikdy** token nedávej do souboru v repu.
 
+**3. PowerShell 7 (pro `review-pps` a `review-init-pps`)**
+
+Skripty review běží v PowerShell 7 (`pwsh`) na macOS i Windows:
+
+```bash
+# macOS
+brew install powershell
+# Windows
+winget install --id Microsoft.PowerShell
+```
+
+## Review podle pravidel repa
+
+`review-pps` čte kritéria z repa, ne ze sebe: kontrakt `REVIEW.md` v kořeni (závažnost, na co se zaměřit, co nehlásit,
+odkazy na `CLAUDE.md`/`AGENTS.md`/pravidla), pravidla s `paths:` a mapu cest na znalostní skilly. Bez `REVIEW.md` dělá
+obecné review a nabídne `/review-init-pps`. Formát kontraktu: [`skills/review-pps/references/kontrakt-v1.md`](skills/review-pps/references/kontrakt-v1.md),
+šablona: [`skills/review-init-pps/references/sablona-REVIEW.md`](skills/review-init-pps/references/sablona-REVIEW.md).
+
 ## Instalace
 
 ```
@@ -66,9 +86,13 @@ PAT v env proměnné `AZURE_DEVOPS_EXT_PAT` se scope **Code (Read & Write)** (te
 /pr-pps
 /pr-fix-pps
 /pr-fix-pps 12345
+/review-pps planning
+/review-pps --rozpracovane
+/review-init-pps technology
 ```
 
 ## Bezpečnost
 
 - **No direct outbound calls** — veškerá komunikace s Azure DevOps jde přes `az` / `az devops invoke`, nikdy přes `curl`/`wget`.
+- `review-pps` a `review-init-pps` pracují jen s lokálním gitem (žádné síťové volání) a do repa nic nezapisují.
 - Skilly nikdy necommitují secrets a nepoužívají `--force` / `--no-verify` bez explicitního pokynu.
